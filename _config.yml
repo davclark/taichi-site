@@ -9,7 +9,7 @@ description: > # this means to ignore newlines until "baseurl:"
   know if you have any problems! This site is maintained entirely by Dav and is
   not specifically endorsed by Kennedy Krieger.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://taichi.reallygoodmoving.com"
+url: ""
 
 # Build settings
 markdown: kramdown
