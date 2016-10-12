@@ -1,5 +1,5 @@
 import Html exposing (Html, button, div, text, h2, iframe)
-import Html.Attributes exposing (attribute, src, width, height)
+import Html.Attributes exposing (attribute, src, width, height, class)
 import Html.App as App
 import Html.Events exposing (onClick)
 import Json.Encode as Json
@@ -82,9 +82,11 @@ view model =
 
 vimeo model =
     [ h2 [] [text model.title]
-    , iframe [src model.url, width 500, height 282,
-              attribute "frameborder" "0",
-              attribute "webkitallowfullscreen" "true",
-              attribute "mozallowfullscreen" "true",
-              attribute "allowfullscreen" "true"
-              ] [] ]
+    , div [class "videoWrapper"] [
+        iframe [src model.url, width 500, height 282,
+                attribute "frameborder" "0",
+                attribute "webkitallowfullscreen" "true",
+                attribute "mozallowfullscreen" "true",
+                attribute "allowfullscreen" "true"] []
+        ]
+    ]

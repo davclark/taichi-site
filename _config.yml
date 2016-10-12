@@ -3,6 +3,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: Tai Chi Practice Videos
+author: Dav Clark
 email: clarkda@kennedykrieger.org
 description: > # this means to ignore newlines until "baseurl:"
   Videos for home practice of the KKI / CNIR Tai Chi curriculum. Please let Dav
