@@ -1,5 +1,5 @@
 import Html exposing (Html, button, div, text, h2, iframe)
-import Html.Attributes exposing (attribute, property, src, width, height)
+import Html.Attributes exposing (attribute, src, width, height)
 import Html.App as App
 import Html.Events exposing (onClick)
 import Json.Encode as Json

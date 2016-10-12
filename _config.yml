@@ -20,3 +20,5 @@ exclude:
   - '*.elm'
   - Makefile
   - elm-*
+
+google_analytics: UA-85637629-1
