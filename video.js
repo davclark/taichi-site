@@ -7545,6 +7545,16 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
+var _user$project$Main$vimeo = function (model) {
+	return A2(
+		_elm_lang$html$Html$h2,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html$text(model.title)
+			]));
+};
 var _user$project$Main$form = {
 	week1: {title: 'Week 1: Opening', url: '//player.vimeo.com/video/119410170'},
 	week2: {title: 'Week 2: Grasping the bird\'s tail, first way', url: '//player.vimeo.com/video/119410628'},
@@ -7554,28 +7564,32 @@ var _user$project$Main$form = {
 	week6: {title: 'Week 6: Opening the arms', url: '//player.vimeo.com/video/119410627'},
 	week7: {title: 'Week 7: Roll / Closing the form', url: '//player.vimeo.com/video/119410167'}
 };
-var _user$project$Main$model = _user$project$Main$form.week1.url;
+var _user$project$Main$model = _user$project$Main$form.week1;
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'Week1':
-				return _user$project$Main$form.week1.url;
+				return _user$project$Main$form.week1;
 			case 'Week2':
-				return _user$project$Main$form.week2.url;
+				return _user$project$Main$form.week2;
 			case 'Week3':
-				return _user$project$Main$form.week3.url;
+				return _user$project$Main$form.week3;
 			case 'Week4':
-				return _user$project$Main$form.week4.url;
+				return _user$project$Main$form.week4;
 			case 'Week5':
-				return _user$project$Main$form.week5.url;
+				return _user$project$Main$form.week5;
 			case 'Week6':
-				return _user$project$Main$form.week6.url;
+				return _user$project$Main$form.week6;
 			default:
-				return _user$project$Main$form.week6.url;
+				return _user$project$Main$form.week7;
 		}
 	});
 var _user$project$Main$warmup = {title: 'Taichi warmup', url: '//player.vimeo.com/video/119411037'};
+var _user$project$Main$Model = F2(
+	function (a, b) {
+		return {title: a, url: b};
+	});
 var _user$project$Main$Week7 = {ctor: 'Week7'};
 var _user$project$Main$Week6 = {ctor: 'Week6'};
 var _user$project$Main$Week5 = {ctor: 'Week5'};
@@ -7661,14 +7675,7 @@ var _user$project$Main$view = function (model) {
 					[
 						_elm_lang$html$Html$text('7')
 					])),
-				A2(
-				_elm_lang$html$Html$div,
-				_elm_lang$core$Native_List.fromArray(
-					[]),
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html$text(model)
-					]))
+				_user$project$Main$vimeo(model)
 			]));
 };
 var _user$project$Main$main = {

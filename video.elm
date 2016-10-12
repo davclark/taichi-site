@@ -1,4 +1,4 @@
-import Html exposing (Html, button, div, text)
+import Html exposing (Html, button, div, text, h2)
 import Html.App as App
 import Html.Events exposing (onClick)
 import Dict
@@ -18,7 +18,6 @@ form = {
       week1 =
        {title = "Week 1: Opening",
         url = "//player.vimeo.com/video/119410170"}
-    -- Here down needs updated titles and URLs
     , week2 =
        {title = "Week 2: Grasping the bird's tail, first way",
         url = "//player.vimeo.com/video/119410628"}
@@ -42,11 +41,11 @@ form = {
 
 -- MODEL
 
-type alias Model = String
+type alias Model = {title: String, url: String}
 
 model : Model
 model =
-    form.week1.url
+    form.week1
 
 
 -- UPDATE
@@ -56,13 +55,13 @@ type Msg = Week1 | Week2 | Week3 | Week4 | Week5 | Week6 | Week7
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Week1 -> form.week1.url
-        Week2 -> form.week2.url
-        Week3 -> form.week3.url
-        Week4 -> form.week4.url
-        Week5 -> form.week5.url
-        Week6 -> form.week6.url
-        Week7 -> form.week6.url
+        Week1 -> form.week1
+        Week2 -> form.week2
+        Week3 -> form.week3
+        Week4 -> form.week4
+        Week5 -> form.week5
+        Week6 -> form.week6
+        Week7 -> form.week7
 
 
 -- VIEW
@@ -78,5 +77,12 @@ view model =
     , button [ onClick Week5 ] [ text "5" ]
     , button [ onClick Week6 ] [ text "6" ]
     , button [ onClick Week7 ] [ text "7" ]
-    , div [] [ text model ]
+    , vimeo model
     ]
+
+vimeo : Model -> Html Msg
+vimeo model =
+    h2 [] [text model.title]
+    -- iframe [src=model.url,
+    --     width="500", height="282", frameborder="0",
+    --     webkitallowfullscreen mozallowfullscreen allowfullscreen] []
