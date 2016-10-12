@@ -1,8 +1,6 @@
 import Html exposing (Html, button, div, text, h2)
 import Html.App as App
 import Html.Events exposing (onClick)
-import Dict
-
 
 main =
   App.beginnerProgram { model = model, view = view, update = update }
@@ -44,8 +42,7 @@ form = {
 type alias Model = {title: String, url: String}
 
 model : Model
-model =
-    form.week1
+model = form.week1
 
 
 -- UPDATE
@@ -68,8 +65,8 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-  div [] [
-      text "Select week: "
+    div [] (List.append
+    [ text "Select week: "
     , button [ onClick Week1 ] [ text "1" ]
     , button [ onClick Week2 ] [ text "2" ]
     , button [ onClick Week3 ] [ text "3" ]
@@ -77,12 +74,12 @@ view model =
     , button [ onClick Week5 ] [ text "5" ]
     , button [ onClick Week6 ] [ text "6" ]
     , button [ onClick Week7 ] [ text "7" ]
-    , vimeo model
     ]
+    (vimeo model))
 
-vimeo : Model -> Html Msg
+
 vimeo model =
-    h2 [] [text model.title]
+    [ h2 [] [text model.title]]
     -- iframe [src=model.url,
     --     width="500", height="282", frameborder="0",
     --     webkitallowfullscreen mozallowfullscreen allowfullscreen] []
