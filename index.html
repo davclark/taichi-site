@@ -4,26 +4,24 @@ layout: default
 
 <div class="home">
 
-  <h1 class="page-heading">Practice Videos</h1>
+    <p>Thank you for your practice. A complete session would include the
+        warmup and this week's form movement. But it makes a difference even if
+        you can only do 5 minutes. Keep up the good work!</p>
 
-    <h2>Warmup</h2>
-      <iframe src="//player.vimeo.com/video/119411037"
-          width="500" height="282" frameborder="0"
-        webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+  <h2>Warmup</h2>
+    <iframe src="//player.vimeo.com/video/119411037"
+        width="500" height="282" frameborder="0"
+      webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
-    <div id="video"></div>
-    <script src="video.js"></script>
-    <script>
-        var node = document.getElementById('video');
-        var app = Elm.Main.embed(node);
-        // Note: if your Elm module is named "MyThing.Root" you
-        // would call "Elm.MyThing.Root.embed(node)" instead.
-    </script>
+  <div id="video"></div>
+  <script src="video.js"></script>
+  <script>
+      var node = document.getElementById('video');
+      var app = Elm.Main.embed(node);
+  </script>
 
-  <h1 class="page-heading">Take credit: Journal your practice!</h1>
+  <h1>Take credit: Journal your practice!</h1>
 
   <p><a href="">Google form - Tai Chi Practice Journal</a></p>
-
-  <!-- <p class="rss&#45;subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p> -->
 
 </div>
