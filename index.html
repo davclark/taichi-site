@@ -10,6 +10,16 @@ layout: default
       <iframe src="//player.vimeo.com/video/119411037"
           width="500" height="282" frameborder="0"
         webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+    <div id="video"></div>
+    <script src="video.js"></script>
+    <script>
+        var node = document.getElementById('video');
+        var app = Elm.Main.embed(node);
+        // Note: if your Elm module is named "MyThing.Root" you
+        // would call "Elm.MyThing.Root.embed(node)" instead.
+    </script>
+
     <h2>Week 1: Opening</h2>
     <iframe src="//player.vimeo.com/video/119410170"
         width="500" height="282" frameborder="0"

@@ -14,3 +14,9 @@ url: ""
 # Build settings
 markdown: kramdown
 theme: minima
+
+exclude:
+  - Gemfile*
+  - '*.elm'
+  - Makefile
+  - elm-*
