@@ -23,3 +23,13 @@ exclude:
   - elm-*
 
 google_analytics: UA-85637629-1
+
+# Below are GitHub pages defaults / mods (noted in comments)
+github: [metadata]
+kramdown:
+  input: GFM
+  hard_wrap: false
+# Don't actually care to have these installed...
+# gems:
+#   - jekyll-coffeescript
+#   - jekyll-paginate
