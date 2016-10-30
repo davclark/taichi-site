@@ -8673,19 +8673,83 @@ var _evancz$elm_http$Http$post = F3(
 var _davclark$taichi_site$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
+var _davclark$taichi_site$Main$vimeo = function (maybe_info) {
+	var _p0 = maybe_info;
+	if (_p0.ctor === 'Nothing') {
+		return _elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$html$Html$text('No (valid) video number selected')
+			]);
+	} else {
+		var _p1 = _p0._0;
+		return _elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$h2,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text(_p1.title)
+					])),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$class('videoWrapper')
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$iframe,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$src(_p1.url),
+								_elm_lang$html$Html_Attributes$width(500),
+								_elm_lang$html$Html_Attributes$height(282),
+								A2(_elm_lang$html$Html_Attributes$attribute, 'frameborder', '0'),
+								A2(_elm_lang$html$Html_Attributes$attribute, 'webkitallowfullscreen', 'true'),
+								A2(_elm_lang$html$Html_Attributes$attribute, 'mozallowfullscreen', 'true'),
+								A2(_elm_lang$html$Html_Attributes$attribute, 'allowfullscreen', 'true')
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[]))
+					]))
+			]);
+	}
+};
+var _davclark$taichi_site$Main$dispVideos = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		A2(
+			_elm_lang$core$List$append,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html$text('Select week: ')
+				]),
+			_davclark$taichi_site$Main$vimeo(
+				A2(_elm_lang$core$Array$get, model.selected, model.form))));
+};
 var _davclark$taichi_site$Main$view = function (model) {
-	return _elm_lang$html$Html$text(model.status);
+	var _p2 = model.status;
+	if (_p2 === 'Updated') {
+		return _davclark$taichi_site$Main$dispVideos(model);
+	} else {
+		return _elm_lang$html$Html$text(model.status);
+	}
 };
 var _davclark$taichi_site$Main$update = F2(
 	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'SwitchSession':
+		var _p3 = msg;
+		switch (_p3.ctor) {
+			case 'SetWeek':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{status: 'Switch!'}),
+						{selected: _p3._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'FetchSucceed':
@@ -8693,7 +8757,7 @@ var _davclark$taichi_site$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{form: _p0._0}),
+						{form: _p3._0, selected: 0, status: 'Updated'}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
@@ -8702,7 +8766,7 @@ var _davclark$taichi_site$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							status: _elm_lang$core$Basics$toString(_p0._0)
+							status: _elm_lang$core$Basics$toString(_p3._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -8713,16 +8777,19 @@ var _davclark$taichi_site$Main$VidInfo = F2(
 	function (a, b) {
 		return {title: a, url: b};
 	});
-var _davclark$taichi_site$Main$decodeSession = _elm_lang$core$Json_Decode$list(
+var _davclark$taichi_site$Main$decodeSession = _elm_lang$core$Json_Decode$array(
 	A3(
 		_elm_lang$core$Json_Decode$object2,
 		_davclark$taichi_site$Main$VidInfo,
 		A2(_elm_lang$core$Json_Decode_ops[':='], 'title', _elm_lang$core$Json_Decode$string),
 		A2(_elm_lang$core$Json_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string)));
-var _davclark$taichi_site$Main$Model = F3(
-	function (a, b, c) {
-		return {warmup: a, form: b, status: c};
+var _davclark$taichi_site$Main$Model = F4(
+	function (a, b, c, d) {
+		return {warmup: a, form: b, status: c, selected: d};
 	});
+var _davclark$taichi_site$Main$SetWeek = function (a) {
+	return {ctor: 'SetWeek', _0: a};
+};
 var _davclark$taichi_site$Main$FetchFail = function (a) {
 	return {ctor: 'FetchFail', _0: a};
 };
@@ -8742,19 +8809,13 @@ var _davclark$taichi_site$Main$getClassInfo = function (session) {
 };
 var _davclark$taichi_site$Main$init = {
 	ctor: '_Tuple2',
-	_0: {
-		warmup: _davclark$taichi_site$Main$warmup,
-		form: _elm_lang$core$Native_List.fromArray(
-			[]),
-		status: 'Initialized'
-	},
+	_0: {warmup: _davclark$taichi_site$Main$warmup, form: _elm_lang$core$Array$empty, status: 'Initialized', selected: 0},
 	_1: _davclark$taichi_site$Main$getClassInfo('tue+thu')
 };
 var _davclark$taichi_site$Main$main = {
 	main: _elm_lang$html$Html_App$program(
 		{init: _davclark$taichi_site$Main$init, view: _davclark$taichi_site$Main$view, update: _davclark$taichi_site$Main$update, subscriptions: _davclark$taichi_site$Main$subscriptions})
 };
-var _davclark$taichi_site$Main$SwitchSession = {ctor: 'SwitchSession'};
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 _elm_lang$core$Native_Platform.addPublicModule(Elm['Main'], 'Main', typeof _davclark$taichi_site$Main$main === 'undefined' ? null : _davclark$taichi_site$Main$main);

@@ -7,6 +7,7 @@ import Http
 import Json.Decode exposing (..)
 import Json.Encode as Encode
 import Task
+import Array exposing (..)
 
 
 
@@ -20,8 +21,9 @@ main =
 
 type alias VidInfo = {title : String, url: String}
 type alias Model = { warmup : VidInfo
-                   , form: List VidInfo
-                   , status: String }
+                   , form: Array VidInfo
+                   , status: String
+                   , selected: Int }
 
 
 warmup = {
@@ -30,25 +32,28 @@ warmup = {
 
 init : (Model, Cmd Msg)
 init =
-  ( {warmup = warmup, form = [], status = "Initialized"}
+  ( {warmup = warmup, form = empty, status = "Initialized", selected = 0}
   , getClassInfo "tue+thu"
   )
 
 -- UPDATE
 
 type Msg
-  = SwitchSession
-  | FetchSucceed (List VidInfo)
+  = FetchSucceed (Array VidInfo)
   | FetchFail Http.Error
+  | SetWeek Int
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        SwitchSession ->
-            ({model | status = "Switch!"}, Cmd.none)
+        SetWeek num ->
+            ({model | selected = num}, Cmd.none)
 
         FetchSucceed jsonData ->
-            ({model | form = jsonData}, Cmd.none)
+            -- Note we always reset selected to 0 here
+            -- Out-of-bounds checking is handled under the view in vimeo
+            ( { model | form = jsonData, selected = 0 , status = "Updated"}
+            , Cmd.none )
 
         FetchFail msg ->
             ({model | status = toString msg}, Cmd.none)
@@ -58,8 +63,38 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-        text model.status
+    case model.status of
+        "Updated" ->
+            dispVideos model
 
+        _ ->
+            text model.status
+
+dispVideos : Model -> Html Msg
+dispVideos model =
+    div [] (List.append
+    [ text "Select week: "
+    -- Want to auto-generate something like this:
+    -- , button [ onClick Week 0 ] [ text "1" ]
+    ]
+    (vimeo (get model.selected model.form)) )
+
+vimeo : Maybe VidInfo -> List (Html Msg)
+vimeo maybe_info =
+    case maybe_info of
+        Nothing ->
+            [text "No (valid) video number selected"]
+
+        Just info ->
+            [ h2 [] [text info.title]
+            , div [class "videoWrapper"] [
+                iframe [src info.url, width 500, height 282,
+                        attribute "frameborder" "0",
+                        attribute "webkitallowfullscreen" "true",
+                        attribute "mozallowfullscreen" "true",
+                        attribute "allowfullscreen" "true"] []
+                ]
+            ]
 
 -- SUBSCRIPTIONS
 
@@ -76,6 +111,6 @@ getClassInfo session =
   in
     Task.perform FetchFail FetchSucceed (Http.get decodeSession url)
 
-decodeSession : Decoder (List VidInfo)
+decodeSession : Decoder (Array VidInfo)
 decodeSession =
-    Json.Decode.list (object2 VidInfo ("title" := string) ("url" := string))
+    Json.Decode.array (object2 VidInfo ("title" := string) ("url" := string))
