@@ -1,4 +1,4 @@
-serve: index.html elm test
+serve: index.html elm
 	bundle exec jekyll serve
 
 elm: video.elm

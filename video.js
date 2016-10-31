@@ -5817,6 +5817,87 @@ var _elm_lang$core$Json_Decode$dict = function (decoder) {
 };
 var _elm_lang$core$Json_Decode$Decoder = {ctor: 'Decoder'};
 
+var _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$nullable = function (decoder) {
+	return _elm_lang$core$Json_Decode$oneOf(
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+				A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, decoder)
+			]));
+};
+var _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode = _elm_lang$core$Json_Decode$succeed;
+var _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$resolveResult = function (resultDecoder) {
+	return A2(_elm_lang$core$Json_Decode$customDecoder, resultDecoder, _elm_lang$core$Basics$identity);
+};
+var _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$custom = _elm_lang$core$Json_Decode$object2(
+	F2(
+		function (x, y) {
+			return y(x);
+		}));
+var _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$hardcoded = function (_p0) {
+	return _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$custom(
+		_elm_lang$core$Json_Decode$succeed(_p0));
+};
+var _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optionalDecoder = F3(
+	function (pathDecoder, valDecoder, fallback) {
+		var nullOr = function (decoder) {
+			return _elm_lang$core$Json_Decode$oneOf(
+				_elm_lang$core$Native_List.fromArray(
+					[
+						decoder,
+						_elm_lang$core$Json_Decode$null(fallback)
+					]));
+		};
+		var handleResult = function (input) {
+			var _p1 = A2(_elm_lang$core$Json_Decode$decodeValue, pathDecoder, input);
+			if (_p1.ctor === 'Ok') {
+				return A2(
+					_elm_lang$core$Json_Decode$decodeValue,
+					nullOr(valDecoder),
+					_p1._0);
+			} else {
+				return _elm_lang$core$Result$Ok(fallback);
+			}
+		};
+		return A2(_elm_lang$core$Json_Decode$customDecoder, _elm_lang$core$Json_Decode$value, handleResult);
+	});
+var _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optionalAt = F4(
+	function (path, valDecoder, fallback, decoder) {
+		return A2(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$custom,
+			A3(
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optionalDecoder,
+				A2(_elm_lang$core$Json_Decode$at, path, _elm_lang$core$Json_Decode$value),
+				valDecoder,
+				fallback),
+			decoder);
+	});
+var _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional = F4(
+	function (key, valDecoder, fallback, decoder) {
+		return A2(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$custom,
+			A3(
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optionalDecoder,
+				A2(_elm_lang$core$Json_Decode_ops[':='], key, _elm_lang$core$Json_Decode$value),
+				valDecoder,
+				fallback),
+			decoder);
+	});
+var _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt = F3(
+	function (path, valDecoder, decoder) {
+		return A2(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$custom,
+			A2(_elm_lang$core$Json_Decode$at, path, valDecoder),
+			decoder);
+	});
+var _NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required = F3(
+	function (key, valDecoder, decoder) {
+		return A2(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$custom,
+			A2(_elm_lang$core$Json_Decode_ops[':='], key, valDecoder),
+			decoder);
+	});
+
 //import Native.Json //
 
 var _elm_lang$virtual_dom$Native_VirtualDom = function() {
@@ -8707,7 +8788,7 @@ var _evancz$elm_http$Http$post = F3(
 var _davclark$taichi_site$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _davclark$taichi_site$Main$vimeo = function (maybe_info) {
+var _davclark$taichi_site$Main$videoIFrame = function (maybe_info) {
 	var _p0 = maybe_info;
 	if (_p0.ctor === 'Nothing') {
 		return _elm_lang$core$Native_List.fromArray(
@@ -8752,7 +8833,49 @@ var _davclark$taichi_site$Main$vimeo = function (maybe_info) {
 			]);
 	}
 };
-var _davclark$taichi_site$Main$tueThuMsg = _elm_lang$core$Native_List.fromArray(
+var _davclark$taichi_site$Main$warmup = {title: 'Taichi warmup', url: '//player.vimeo.com/video/119411037'};
+var _davclark$taichi_site$Main$VidInfo = F2(
+	function (a, b) {
+		return {title: a, url: b};
+	});
+var _davclark$taichi_site$Main$decodeSession = _elm_lang$core$Json_Decode$array(
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'url',
+		_elm_lang$core$Json_Decode$string,
+		A3(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+			'title',
+			_elm_lang$core$Json_Decode$string,
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_davclark$taichi_site$Main$VidInfo))));
+var _davclark$taichi_site$Main$Model = F5(
+	function (a, b, c, d, e) {
+		return {warmup: a, form: b, status: c, selected: d, classVersion: e};
+	});
+var _davclark$taichi_site$Main$SwitchClass = function (a) {
+	return {ctor: 'SwitchClass', _0: a};
+};
+var _davclark$taichi_site$Main$classChoice = function (lab) {
+	return A2(
+		_elm_lang$html$Html$label,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$input,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Attributes$type$('radio'),
+						_elm_lang$html$Html_Events$onClick(
+						_davclark$taichi_site$Main$SwitchClass(lab))
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[])),
+				_elm_lang$html$Html$text(lab)
+			]));
+};
+var _davclark$taichi_site$Main$classMsg = _elm_lang$core$Native_List.fromArray(
 	[
 		A2(
 		_elm_lang$html$Html$br,
@@ -8772,67 +8895,19 @@ var _davclark$taichi_site$Main$tueThuMsg = _elm_lang$core$Native_List.fromArray(
 					[]),
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html$text('For now, Greenspring Tuesday/Thursday class visit YouTube to '),
-						A2(
-						_elm_lang$html$Html$a,
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html_Attributes$href('https://www.youtube.com/watch?v=YF6LGZG33u0')
-							]),
-						_elm_lang$core$Native_List.fromArray(
-							[
-								_elm_lang$html$Html$text('practice \"Parting the Horse\'s Mane\"')
-							]))
+						_elm_lang$html$Html$text('Be sure to select your class below!')
 					]))
+			])),
+		A2(
+		_elm_lang$html$Html$fieldset,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				_davclark$taichi_site$Main$classChoice('mon+wed'),
+				_davclark$taichi_site$Main$classChoice('tue+thu')
 			]))
 	]);
-var _davclark$taichi_site$Main$update = F2(
-	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
-			case 'SetWeek':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{selected: _p2._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'FetchSucceed':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{form: _p2._0, selected: 0, status: 'Updated'}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							status: _elm_lang$core$Basics$toString(_p2._0)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-		}
-	});
-var _davclark$taichi_site$Main$warmup = {title: 'Taichi warmup', url: '//player.vimeo.com/video/119411037'};
-var _davclark$taichi_site$Main$VidInfo = F2(
-	function (a, b) {
-		return {title: a, url: b};
-	});
-var _davclark$taichi_site$Main$decodeSession = _elm_lang$core$Json_Decode$array(
-	A3(
-		_elm_lang$core$Json_Decode$object2,
-		_davclark$taichi_site$Main$VidInfo,
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'title', _elm_lang$core$Json_Decode$string),
-		A2(_elm_lang$core$Json_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string)));
-var _davclark$taichi_site$Main$Model = F4(
-	function (a, b, c, d) {
-		return {warmup: a, form: b, status: c, selected: d};
-	});
 var _davclark$taichi_site$Main$SetWeek = function (a) {
 	return {ctor: 'SetWeek', _0: a};
 };
@@ -8858,9 +8933,9 @@ var _davclark$taichi_site$Main$dispVideos = function (model) {
 		_elm_lang$core$List$concat(
 			_elm_lang$core$Native_List.fromArray(
 				[
-					_davclark$taichi_site$Main$vimeo(
+					_davclark$taichi_site$Main$videoIFrame(
 					_elm_lang$core$Maybe$Just(model.warmup)),
-					_davclark$taichi_site$Main$tueThuMsg,
+					_davclark$taichi_site$Main$classMsg,
 					A2(
 					_elm_lang$core$List_ops['::'],
 					_elm_lang$html$Html$text('Select week: '),
@@ -8870,13 +8945,13 @@ var _davclark$taichi_site$Main$dispVideos = function (model) {
 						_elm_lang$core$Native_List.range(
 							1,
 							_elm_lang$core$Array$length(model.form)))),
-					_davclark$taichi_site$Main$vimeo(
+					_davclark$taichi_site$Main$videoIFrame(
 					A2(_elm_lang$core$Array$get, model.selected, model.form))
 				])));
 };
 var _davclark$taichi_site$Main$view = function (model) {
-	var _p3 = model.status;
-	if (_p3 === 'Updated') {
+	var _p2 = model.status;
+	if (_p2 === 'Updated') {
 		return _davclark$taichi_site$Main$dispVideos(model);
 	} else {
 		return _elm_lang$html$Html$text(model.status);
@@ -8901,9 +8976,50 @@ var _davclark$taichi_site$Main$getClassInfo = function (session) {
 };
 var _davclark$taichi_site$Main$init = {
 	ctor: '_Tuple2',
-	_0: {warmup: _davclark$taichi_site$Main$warmup, form: _elm_lang$core$Array$empty, status: 'Initialized', selected: 0},
+	_0: {warmup: _davclark$taichi_site$Main$warmup, form: _elm_lang$core$Array$empty, status: 'Initialized', selected: 0, classVersion: 'mon+wed'},
 	_1: _davclark$taichi_site$Main$getClassInfo('mon+wed')
 };
+var _davclark$taichi_site$Main$update = F2(
+	function (msg, model) {
+		var _p3 = msg;
+		switch (_p3.ctor) {
+			case 'SetWeek':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{selected: _p3._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'FetchSucceed':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{form: _p3._0, selected: 0, status: 'Updated'}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'FetchFail':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							status: _elm_lang$core$Basics$toString(_p3._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				var _p4 = _p3._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{classVersion: _p4}),
+					_1: _davclark$taichi_site$Main$getClassInfo(_p4)
+				};
+		}
+	});
 var _davclark$taichi_site$Main$main = {
 	main: _elm_lang$html$Html_App$program(
 		{init: _davclark$taichi_site$Main$init, view: _davclark$taichi_site$Main$view, update: _davclark$taichi_site$Main$update, subscriptions: _davclark$taichi_site$Main$subscriptions})

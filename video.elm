@@ -1,10 +1,11 @@
 import Html.App as App
 import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Attributes exposing (attribute, class, href, src, width, height, type')
 import Html.Events exposing (..)
 import Http
 -- I don't know how to import :=
 import Json.Decode exposing (..)
+import Json.Decode.Pipeline exposing (decode, required)
 import Task
 import Array exposing (..)
 
@@ -22,7 +23,8 @@ type alias VidInfo = {title : String, url: String}
 type alias Model = { warmup : VidInfo
                    , form: Array VidInfo
                    , status: String
-                   , selected: Int }
+                   , selected: Int
+                   , classVersion: String }
 
 
 warmup = {
@@ -31,7 +33,8 @@ warmup = {
 
 init : (Model, Cmd Msg)
 init =
-  ( {warmup = warmup, form = empty, status = "Initialized", selected = 0}
+  ( {warmup = warmup, form = empty, status = "Initialized", selected = 0,
+     classVersion = "mon+wed" }
   , getClassInfo "mon+wed"
   )
 
@@ -41,6 +44,7 @@ type Msg
   = FetchSucceed (Array VidInfo)
   | FetchFail Http.Error
   | SetWeek Int
+  | SwitchClass String
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -50,12 +54,15 @@ update msg model =
 
         FetchSucceed jsonData ->
             -- Note we always reset selected to 0 here
-            -- Out-of-bounds checking is handled under the view in vimeo
+            -- Out-of-bounds checking is handled under the view in videoIFrame
             ( { model | form = jsonData, selected = 0 , status = "Updated"}
             , Cmd.none )
 
         FetchFail msg ->
             ({model | status = toString msg}, Cmd.none)
+
+        SwitchClass lab ->
+            ({model | classVersion = lab} , getClassInfo lab)
 
 
 -- VIEW
@@ -74,31 +81,37 @@ dispVideos model =
 
 
     div [] (List.concat
-             [ (vimeo (Just model.warmup))
-             , tueThuMsg
+             [ (videoIFrame (Just model.warmup))
+             , classMsg
              , (text "Select week: " ::
                 List.map weekButton [1..(length model.form)])
-             , (vimeo (get model.selected model.form))
+             , (videoIFrame (get model.selected model.form))
              ]
            )
 
-tueThuMsg =
+classMsg =
   [ br [] []
   , p []
-    [ strong []
-      [ text "For now, Greenspring Tuesday/Thursday class visit YouTube to "
-      , a [href "https://www.youtube.com/watch?v=YF6LGZG33u0"]
-          [text "practice \"Parting the Horse's Mane\""]
-      ]
+    [ strong [] [ text "Be sure to select your class below!" ]
     ]
+  , fieldset []
+      [ classChoice "mon+wed"
+      , classChoice "tue+thu"
+      ]
   ]
+
+classChoice lab =
+    label []
+        [ input [ type' "radio", onClick (SwitchClass lab) ] []
+        , text lab
+        ]
 
 weekButton : Int -> Html Msg
 weekButton num =
     button [ onClick (SetWeek (num-1)) ] [ text (toString num) ]
 
-vimeo : Maybe VidInfo -> List (Html Msg)
-vimeo maybe_info =
+videoIFrame : Maybe VidInfo -> List (Html Msg)
+videoIFrame maybe_info =
     case maybe_info of
         Nothing ->
             [text "No (valid) video number selected"]
@@ -113,6 +126,7 @@ vimeo maybe_info =
                         attribute "allowfullscreen" "true"] []
                 ]
             ]
+
 
 -- SUBSCRIPTIONS
 
@@ -129,6 +143,9 @@ getClassInfo session =
   in
     Task.perform FetchFail FetchSucceed (Http.get decodeSession url)
 
+-- This is using the more recently developed pipeline approach from NoRedInk
 decodeSession : Decoder (Array VidInfo)
 decodeSession =
-    Json.Decode.array (object2 VidInfo ("title" := string) ("url" := string))
+    Json.Decode.array (decode VidInfo
+                          |> required "title" string
+                          |> required "url" string)
