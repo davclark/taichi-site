@@ -1,6 +1,7 @@
 import Html.App as App
 import Html exposing (..)
-import Html.Attributes exposing (attribute, class, href, src, width, height, type')
+import Html.Attributes exposing (attribute, class, href, src, width, height,
+                                 type', name, style)
 import Html.Events exposing (..)
 import Http
 -- I don't know how to import :=
@@ -101,8 +102,10 @@ classMsg =
   ]
 
 classChoice lab =
-    label []
-        [ input [ type' "radio", onClick (SwitchClass lab) ] []
+    label
+        [ style [("padding", "5px")]
+        ]
+        [ input [ type' "radio", name "class-session", onClick (SwitchClass lab) ] []
         , text lab
         ]
 

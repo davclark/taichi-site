@@ -8859,7 +8859,13 @@ var _davclark$taichi_site$Main$classChoice = function (lab) {
 	return A2(
 		_elm_lang$html$Html$label,
 		_elm_lang$core$Native_List.fromArray(
-			[]),
+			[
+				_elm_lang$html$Html_Attributes$style(
+				_elm_lang$core$Native_List.fromArray(
+					[
+						{ctor: '_Tuple2', _0: 'padding', _1: '5px'}
+					]))
+			]),
 		_elm_lang$core$Native_List.fromArray(
 			[
 				A2(
@@ -8867,6 +8873,7 @@ var _davclark$taichi_site$Main$classChoice = function (lab) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html_Attributes$type$('radio'),
+						_elm_lang$html$Html_Attributes$name('class-session'),
 						_elm_lang$html$Html_Events$onClick(
 						_davclark$taichi_site$Main$SwitchClass(lab))
 					]),
