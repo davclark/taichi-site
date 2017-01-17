@@ -12,6 +12,10 @@ description: > # this means to ignore newlines until "baseurl:"
 baseurl: "" # the subpath of your site, e.g. /blog
 url: ""
 
+# Works with Dreamhost setup, which deploys from a public dir
+destination: ../public
+keep_files: ["videos"]
+
 # Build settings
 markdown: kramdown
 theme: minima
