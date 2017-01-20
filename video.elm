@@ -3,39 +3,24 @@ module Main exposing (..)
 import Html exposing (..) -- includes program
 import Html.Attributes
     exposing
-        ( attribute
-        , class
-        , href
-        , src
-        , width
-        , height
-        , type_
-        , name
+        ( name
         , style
+        , type_
         )
-import Html.Events exposing (..)
+import Html.Events exposing (onClick)
 import Http
 
+import Array exposing (Array, get, length, empty)
 
--- I don't know how to import :=
-
-import Json.Decode exposing (..)
-import Json.Decode.Pipeline exposing (decode, required)
-import Task
-import Array exposing (..)
-
+import MyViews exposing (VidInfo, decodeSession, videoFile)
 
 main =
-    program
+    Html.program
         { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
         }
-
-
-type alias VidInfo =
-    { title : String, url : String }
 
 
 type alias Model =
@@ -113,15 +98,19 @@ dispVideos : Model -> Html Msg
 dispVideos model =
     div []
         (List.concat
-            [ (videoIFrame (Just model.warmup))
-            , classMsg
-            , (text "Select week: "
+            [
+            -- Warmups
+            -- (videoIFrame (Just model.warmup)) 
+            -- , classMsg , 
+            -- Form
+              (text "Select week: "
                 :: List.map weekButton (List.range 1 (length model.form))
               )
-            , (videoIFrame (get model.selected model.form))
+            , (videoFile (Just (VidInfo "Week 1: Opening"
+                           ("//taichi.reallygoodmoving.com" ++
+                            "/videos/form/01-opening.mp4") )))
             ]
         )
-
 
 classMsg =
     [ br [] []
@@ -143,37 +132,11 @@ classChoice lab =
         , text lab
         ]
 
-
 weekButton : Int -> Html Msg
 weekButton num =
     button [ onClick (SetWeek (num - 1)) ] [ text (toString num) ]
 
-
-videoIFrame : Maybe VidInfo -> List (Html Msg)
-videoIFrame maybe_info =
-    case maybe_info of
-        Nothing ->
-            [ text "No (valid) video number selected" ]
-
-        Just info ->
-            [ h2 [] [ text info.title ]
-            , div [ class "videoWrapper" ]
-                [ iframe
-                    [ src info.url
-                    , width 500
-                    , height 282
-                    , attribute "frameborder" "0"
-                    , attribute "webkitallowfullscreen" "true"
-                    , attribute "mozallowfullscreen" "true"
-                    , attribute "allowfullscreen" "true"
-                    ]
-                    []
-                ]
-            ]
-
-
-
--- SUBSCRIPTIONS
+-- SUBSCRIPTIONS - currently unused
 
 
 subscriptions : Model -> Sub Msg
@@ -195,13 +158,3 @@ getClassInfo session =
 
 
 
--- This is using the more recently developed pipeline approach from NoRedInk
-
-
-decodeSession : Decoder (Array VidInfo)
-decodeSession =
-    Json.Decode.array
-        (decode VidInfo
-            |> required "title" string
-            |> required "url" string
-        )

@@ -9109,10 +9109,7 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
-var _davclark$taichi_site$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
-};
-var _davclark$taichi_site$Main$videoIFrame = function (maybe_info) {
+var _davclark$taichi_site$MyViews$videoFile = function (maybe_info) {
 	var _p0 = maybe_info;
 	if (_p0.ctor === 'Nothing') {
 		return {
@@ -9135,6 +9132,49 @@ var _davclark$taichi_site$Main$videoIFrame = function (maybe_info) {
 			_1: {
 				ctor: '::',
 				_0: A2(
+					_elm_lang$html$Html$video,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$src(_p1.url),
+						_1: {
+							ctor: '::',
+							_0: A2(_elm_lang$html$Html_Attributes$attribute, 'controls', ''),
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_lang$html$Html_Attributes$attribute, 'width', '100%'),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		};
+	}
+};
+var _davclark$taichi_site$MyViews$videoIFrame = function (maybe_info) {
+	var _p2 = maybe_info;
+	if (_p2.ctor === 'Nothing') {
+		return {
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('No (valid) video number selected'),
+			_1: {ctor: '[]'}
+		};
+	} else {
+		var _p3 = _p2._0;
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(_p3.title),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
@@ -9147,7 +9187,7 @@ var _davclark$taichi_site$Main$videoIFrame = function (maybe_info) {
 							_elm_lang$html$Html$iframe,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$src(_p1.url),
+								_0: _elm_lang$html$Html_Attributes$src(_p3.url),
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$width(500),
@@ -9159,13 +9199,13 @@ var _davclark$taichi_site$Main$videoIFrame = function (maybe_info) {
 											_0: A2(_elm_lang$html$Html_Attributes$attribute, 'frameborder', '0'),
 											_1: {
 												ctor: '::',
-												_0: A2(_elm_lang$html$Html_Attributes$attribute, 'webkitallowfullscreen', 'true'),
+												_0: A2(_elm_lang$html$Html_Attributes$attribute, 'webkitallowfullscreen', ''),
 												_1: {
 													ctor: '::',
-													_0: A2(_elm_lang$html$Html_Attributes$attribute, 'mozallowfullscreen', 'true'),
+													_0: A2(_elm_lang$html$Html_Attributes$attribute, 'mozallowfullscreen', ''),
 													_1: {
 														ctor: '::',
-														_0: A2(_elm_lang$html$Html_Attributes$attribute, 'allowfullscreen', 'true'),
+														_0: A2(_elm_lang$html$Html_Attributes$attribute, 'allowfullscreen', ''),
 														_1: {ctor: '[]'}
 													}
 												}
@@ -9182,12 +9222,11 @@ var _davclark$taichi_site$Main$videoIFrame = function (maybe_info) {
 		};
 	}
 };
-var _davclark$taichi_site$Main$warmup = {title: 'Taichi warmup', url: '//player.vimeo.com/video/119411037'};
-var _davclark$taichi_site$Main$VidInfo = F2(
+var _davclark$taichi_site$MyViews$VidInfo = F2(
 	function (a, b) {
 		return {title: a, url: b};
 	});
-var _davclark$taichi_site$Main$decodeSession = _elm_lang$core$Json_Decode$array(
+var _davclark$taichi_site$MyViews$decodeSession = _elm_lang$core$Json_Decode$array(
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 		'url',
@@ -9196,7 +9235,12 @@ var _davclark$taichi_site$Main$decodeSession = _elm_lang$core$Json_Decode$array(
 			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 			'title',
 			_elm_lang$core$Json_Decode$string,
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_davclark$taichi_site$Main$VidInfo))));
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_davclark$taichi_site$MyViews$VidInfo))));
+
+var _davclark$taichi_site$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _davclark$taichi_site$Main$warmup = {title: 'Taichi warmup', url: '//player.vimeo.com/video/119411037'};
 var _davclark$taichi_site$Main$Model = F5(
 	function (a, b, c, d, e) {
 		return {warmup: a, form: b, status: c, selected: d, classVersion: e};
@@ -9310,37 +9354,32 @@ var _davclark$taichi_site$Main$dispVideos = function (model) {
 		_elm_lang$core$List$concat(
 			{
 				ctor: '::',
-				_0: _davclark$taichi_site$Main$videoIFrame(
-					_elm_lang$core$Maybe$Just(model.warmup)),
+				_0: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Select week: '),
+					_1: A2(
+						_elm_lang$core$List$map,
+						_davclark$taichi_site$Main$weekButton,
+						A2(
+							_elm_lang$core$List$range,
+							1,
+							_elm_lang$core$Array$length(model.form)))
+				},
 				_1: {
 					ctor: '::',
-					_0: _davclark$taichi_site$Main$classMsg,
-					_1: {
-						ctor: '::',
-						_0: {
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Select week: '),
-							_1: A2(
-								_elm_lang$core$List$map,
-								_davclark$taichi_site$Main$weekButton,
-								A2(
-									_elm_lang$core$List$range,
-									1,
-									_elm_lang$core$Array$length(model.form)))
-						},
-						_1: {
-							ctor: '::',
-							_0: _davclark$taichi_site$Main$videoIFrame(
-								A2(_elm_lang$core$Array$get, model.selected, model.form)),
-							_1: {ctor: '[]'}
-						}
-					}
+					_0: _davclark$taichi_site$MyViews$videoFile(
+						_elm_lang$core$Maybe$Just(
+							A2(
+								_davclark$taichi_site$MyViews$VidInfo,
+								'Week 1: Opening',
+								A2(_elm_lang$core$Basics_ops['++'], '//taichi.reallygoodmoving.com', '/videos/form/01-opening.mp4')))),
+					_1: {ctor: '[]'}
 				}
 			}));
 };
 var _davclark$taichi_site$Main$view = function (model) {
-	var _p2 = model.status;
-	if (_p2 === 'Updated') {
+	var _p0 = model.status;
+	if (_p0 === 'Updated') {
 		return _davclark$taichi_site$Main$dispVideos(model);
 	} else {
 		return _elm_lang$html$Html$text(model.status);
@@ -9357,7 +9396,7 @@ var _davclark$taichi_site$Main$getClassInfo = function (session) {
 	return A2(
 		_elm_lang$http$Http$send,
 		_davclark$taichi_site$Main$NewVidInfo,
-		A2(_elm_lang$http$Http$get, url, _davclark$taichi_site$Main$decodeSession));
+		A2(_elm_lang$http$Http$get, url, _davclark$taichi_site$MyViews$decodeSession));
 };
 var _davclark$taichi_site$Main$init = {
 	ctor: '_Tuple2',
@@ -9366,23 +9405,23 @@ var _davclark$taichi_site$Main$init = {
 };
 var _davclark$taichi_site$Main$update = F2(
 	function (msg, model) {
-		var _p3 = msg;
-		switch (_p3.ctor) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
 			case 'SetWeek':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{selected: _p3._0}),
+						{selected: _p1._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NewVidInfo':
-				if (_p3._0.ctor === 'Ok') {
+				if (_p1._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{form: _p3._0._0, selected: 0, status: 'Updated'}),
+							{form: _p1._0._0, selected: 0, status: 'Updated'}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
@@ -9391,19 +9430,19 @@ var _davclark$taichi_site$Main$update = F2(
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
-								status: _elm_lang$core$Basics$toString(_p3._0._0)
+								status: _elm_lang$core$Basics$toString(_p1._0._0)
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
 			default:
-				var _p4 = _p3._0;
+				var _p2 = _p1._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{classVersion: _p4}),
-					_1: _davclark$taichi_site$Main$getClassInfo(_p4)
+						{classVersion: _p2}),
+					_1: _davclark$taichi_site$Main$getClassInfo(_p2)
 				};
 		}
 	});
