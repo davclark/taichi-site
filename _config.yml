@@ -13,7 +13,7 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: ""
 
 # Works with Dreamhost setup, which deploys from a public dir
-destination: ../public
+destination: ../taichi.reallygoodmoving.com
 keep_files: ["videos"]
 
 # Build settings
