@@ -9240,30 +9240,6 @@ var _davclark$taichi_site$MyViews$decodeSession = _elm_lang$core$Json_Decode$arr
 var _davclark$taichi_site$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _davclark$taichi_site$Main$dispVideos = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		_elm_lang$core$List$concat(
-			{
-				ctor: '::',
-				_0: _davclark$taichi_site$MyViews$videoFile(
-					_elm_lang$core$Maybe$Just(
-						A2(
-							_davclark$taichi_site$MyViews$VidInfo,
-							'Week 1: Opening',
-							A2(_elm_lang$core$Basics_ops['++'], '//taichi.reallygoodmoving.com', '/videos/form/01-opening.mp4')))),
-				_1: {ctor: '[]'}
-			}));
-};
-var _davclark$taichi_site$Main$view = function (model) {
-	var _p0 = model.status;
-	if (_p0 === 'Updated') {
-		return _davclark$taichi_site$Main$dispVideos(model);
-	} else {
-		return _elm_lang$html$Html$text(model.status);
-	}
-};
 var _davclark$taichi_site$Main$warmup = {title: 'Taichi warmup', url: '//player.vimeo.com/video/119411037'};
 var _davclark$taichi_site$Main$Model = F5(
 	function (a, b, c, d, e) {
@@ -9370,6 +9346,49 @@ var _davclark$taichi_site$Main$weekButton = function (num) {
 				_elm_lang$core$Basics$toString(num)),
 			_1: {ctor: '[]'}
 		});
+};
+var _davclark$taichi_site$Main$dispVideos = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		_elm_lang$core$List$concat(
+			{
+				ctor: '::',
+				_0: _davclark$taichi_site$MyViews$videoIFrame(
+					_elm_lang$core$Maybe$Just(model.warmup)),
+				_1: {
+					ctor: '::',
+					_0: _davclark$taichi_site$Main$classMsg,
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Select week: '),
+							_1: A2(
+								_elm_lang$core$List$map,
+								_davclark$taichi_site$Main$weekButton,
+								A2(
+									_elm_lang$core$List$range,
+									1,
+									_elm_lang$core$Array$length(model.form)))
+						},
+						_1: {
+							ctor: '::',
+							_0: _davclark$taichi_site$MyViews$videoIFrame(
+								A2(_elm_lang$core$Array$get, model.selected, model.form)),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}));
+};
+var _davclark$taichi_site$Main$view = function (model) {
+	var _p0 = model.status;
+	if (_p0 === 'Updated') {
+		return _davclark$taichi_site$Main$dispVideos(model);
+	} else {
+		return _elm_lang$html$Html$text(model.status);
+	}
 };
 var _davclark$taichi_site$Main$NewVidInfo = function (a) {
 	return {ctor: 'NewVidInfo', _0: a};

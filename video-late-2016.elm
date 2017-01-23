@@ -3,16 +3,17 @@ module Main exposing (..)
 import Html exposing (..) -- includes program
 import Html.Attributes
     exposing
-        ( name
+        ( type_
+        , name
         , style
-        , type_
         )
 import Html.Events exposing (onClick)
 import Http
 
 import Array exposing (Array, get, length, empty)
 
-import MyViews exposing (VidInfo, decodeSession, videoFile)
+import MyViews exposing (VidInfo, decodeSession, videoIFrame)
+
 
 main =
     Html.program
@@ -98,20 +99,15 @@ dispVideos : Model -> Html Msg
 dispVideos model =
     div []
         (List.concat
-            [
-            -- Warmups
-            --   (videoIFrame (Just model.warmup))
-            -- , classMsg
-
-            -- Form
-            -- , (text "Select week: "
-            --     :: List.map weekButton (List.range 1 (length model.form))
-            --   )
-              (videoFile (Just (VidInfo "Week 1: Opening"
-                           ("//taichi.reallygoodmoving.com" ++
-                            "/videos/form/01-opening.mp4") )))
+            [ (videoIFrame (Just model.warmup))
+            , classMsg
+            , (text "Select week: "
+                :: List.map weekButton (List.range 1 (length model.form))
+              )
+            , (videoIFrame (get model.selected model.form))
             ]
         )
+
 
 classMsg =
     [ br [] []
@@ -133,21 +129,21 @@ classChoice lab =
         , text lab
         ]
 
+
 weekButton : Int -> Html Msg
 weekButton num =
     button [ onClick (SetWeek (num - 1)) ] [ text (toString num) ]
 
--- SUBSCRIPTIONS - currently unused
 
+
+-- SUBSCRIPTIONS
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
 
 
-
 -- HTTP
-
 
 getClassInfo : String -> Cmd Msg
 getClassInfo session =
@@ -156,6 +152,3 @@ getClassInfo session =
             "/class_info/" ++ session ++ ".json"
     in
         Http.send NewVidInfo (Http.get url decodeSession )
-
-
-
