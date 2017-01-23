@@ -9277,7 +9277,7 @@ var _davclark$taichi_site$Main$journal = {
 					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'width', '100%'),
 					_1: {
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$height(1700),
+						_0: _elm_lang$html$Html_Attributes$height(1721),
 						_1: {
 							ctor: '::',
 							_0: A2(_elm_lang$html$Html_Attributes$attribute, 'frameborder', '0'),

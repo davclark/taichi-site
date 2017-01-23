@@ -2,7 +2,7 @@ serve: index.html elm
 	bundle exec jekyll serve
 
 jekyll-build: index.html
-	bundle exec jekyll build
+	bundle exec jekyll build --destination ../taichi.reallygoodmoving.com
 
 build: index.html elm
 	bundle exec jekyll build

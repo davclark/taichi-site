@@ -134,7 +134,7 @@ journal =
                "1FAIpQLSeYzzZNa_3IdwqNRqX1ESqlPdkRaDXuPxA5-iE5kkxx5KEdpw" ++
                "/viewform?embedded=true")
         , attribute "width" "100%"
-        , height 1700
+        , height 1721
         , attribute "frameborder" "0"
         , attribute "marginheight" "0"
         ]
