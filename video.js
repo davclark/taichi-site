@@ -9237,6 +9237,17 @@ var _davclark$taichi_site$MyViews$decodeSession = _elm_lang$core$Json_Decode$arr
 			_elm_lang$core$Json_Decode$string,
 			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_davclark$taichi_site$MyViews$VidInfo))));
 
+var _davclark$taichi_site$Main$getClassInfo = F2(
+	function (msgType, session) {
+		var url = A2(
+			_elm_lang$core$Basics_ops['++'],
+			'/class_info/',
+			A2(_elm_lang$core$Basics_ops['++'], session, '.json'));
+		return A2(
+			_elm_lang$http$Http$send,
+			msgType,
+			A2(_elm_lang$http$Http$get, url, _davclark$taichi_site$MyViews$decodeSession));
+	});
 var _davclark$taichi_site$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
@@ -9287,6 +9298,92 @@ var _davclark$taichi_site$Main$journal = {
 		_1: {ctor: '[]'}
 	}
 };
+var _davclark$taichi_site$Main$numButton = F2(
+	function (target, num) {
+		return A2(
+			_elm_lang$html$Html$button,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(
+					target(num - 1)),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(
+					_elm_lang$core$Basics$toString(num)),
+				_1: {ctor: '[]'}
+			});
+	});
+var _davclark$taichi_site$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'SetWeek':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{selectedForm: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SetWarmup':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{selectedWarmup: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'NewFormInfo':
+				if (_p0._0.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{form: _p0._0._0, selectedForm: 0, status: 'Updated'}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								status: _elm_lang$core$Basics$toString(_p0._0._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			default:
+				if (_p0._0.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{warmup: _p0._0._0, selectedWarmup: 0, status: 'Updated'}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								status: _elm_lang$core$Basics$toString(_p0._0._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+		}
+	});
+var _davclark$taichi_site$Main$Model = F5(
+	function (a, b, c, d, e) {
+		return {warmup: a, form: b, status: c, selectedForm: d, selectedWarmup: e};
+	});
+var _davclark$taichi_site$Main$SetWarmup = function (a) {
+	return {ctor: 'SetWarmup', _0: a};
+};
 var _davclark$taichi_site$Main$dispVideos = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -9294,97 +9391,64 @@ var _davclark$taichi_site$Main$dispVideos = function (model) {
 		_elm_lang$core$List$concat(
 			{
 				ctor: '::',
-				_0: _davclark$taichi_site$MyViews$videoFile(
-					A2(_elm_lang$core$Array$get, model.selected, model.form)),
+				_0: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Warmup: '),
+					_1: A2(
+						_elm_lang$core$List$map,
+						_davclark$taichi_site$Main$numButton(_davclark$taichi_site$Main$SetWarmup),
+						A2(
+							_elm_lang$core$List$range,
+							1,
+							_elm_lang$core$Array$length(model.warmup)))
+				},
 				_1: {
 					ctor: '::',
-					_0: _davclark$taichi_site$Main$journal,
-					_1: {ctor: '[]'}
+					_0: _davclark$taichi_site$MyViews$videoFile(
+						A2(_elm_lang$core$Array$get, model.selectedWarmup, model.warmup)),
+					_1: {
+						ctor: '::',
+						_0: _davclark$taichi_site$MyViews$videoFile(
+							A2(_elm_lang$core$Array$get, model.selectedForm, model.form)),
+						_1: {
+							ctor: '::',
+							_0: _davclark$taichi_site$Main$journal,
+							_1: {ctor: '[]'}
+						}
+					}
 				}
 			}));
 };
 var _davclark$taichi_site$Main$view = function (model) {
-	var _p0 = model.status;
-	if (_p0 === 'Updated') {
+	var _p1 = model.status;
+	if (_p1 === 'Updated') {
 		return _davclark$taichi_site$Main$dispVideos(model);
 	} else {
 		return _elm_lang$html$Html$text(model.status);
 	}
 };
-var _davclark$taichi_site$Main$update = F2(
-	function (msg, model) {
-		var _p1 = msg;
-		if (_p1.ctor === 'SetWeek') {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{selected: _p1._0}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		} else {
-			if (_p1._0.ctor === 'Ok') {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{form: _p1._0._0, selected: 0, status: 'Updated'}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			} else {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							status: _elm_lang$core$Basics$toString(_p1._0._0)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			}
-		}
-	});
-var _davclark$taichi_site$Main$warmup = {title: 'Taichi warmup', url: '//player.vimeo.com/video/119411037'};
-var _davclark$taichi_site$Main$Model = F4(
-	function (a, b, c, d) {
-		return {warmup: a, form: b, status: c, selected: d};
-	});
 var _davclark$taichi_site$Main$SetWeek = function (a) {
 	return {ctor: 'SetWeek', _0: a};
 };
-var _davclark$taichi_site$Main$weekButton = function (num) {
-	return A2(
-		_elm_lang$html$Html$button,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onClick(
-				_davclark$taichi_site$Main$SetWeek(num - 1)),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(
-				_elm_lang$core$Basics$toString(num)),
-			_1: {ctor: '[]'}
-		});
+var _davclark$taichi_site$Main$NewWarmupInfo = function (a) {
+	return {ctor: 'NewWarmupInfo', _0: a};
 };
-var _davclark$taichi_site$Main$NewVidInfo = function (a) {
-	return {ctor: 'NewVidInfo', _0: a};
-};
-var _davclark$taichi_site$Main$getClassInfo = function (session) {
-	var url = A2(
-		_elm_lang$core$Basics_ops['++'],
-		'/class_info/',
-		A2(_elm_lang$core$Basics_ops['++'], session, '.json'));
-	return A2(
-		_elm_lang$http$Http$send,
-		_davclark$taichi_site$Main$NewVidInfo,
-		A2(_elm_lang$http$Http$get, url, _davclark$taichi_site$MyViews$decodeSession));
+var _davclark$taichi_site$Main$NewFormInfo = function (a) {
+	return {ctor: 'NewFormInfo', _0: a};
 };
 var _davclark$taichi_site$Main$init = {
 	ctor: '_Tuple2',
-	_0: {warmup: _davclark$taichi_site$Main$warmup, form: _elm_lang$core$Array$empty, status: 'Initialized', selected: 0},
-	_1: _davclark$taichi_site$Main$getClassInfo('current')
+	_0: {warmup: _elm_lang$core$Array$empty, form: _elm_lang$core$Array$empty, status: 'Initialized', selectedForm: 0, selectedWarmup: 0},
+	_1: _elm_lang$core$Platform_Cmd$batch(
+		{
+			ctor: '::',
+			_0: A2(_davclark$taichi_site$Main$getClassInfo, _davclark$taichi_site$Main$NewWarmupInfo, 'yoga'),
+			_1: {
+				ctor: '::',
+				_0: A2(_davclark$taichi_site$Main$getClassInfo, _davclark$taichi_site$Main$NewFormInfo, 'current'),
+				_1: {ctor: '[]'}
+			}
+		})
 };
 var _davclark$taichi_site$Main$main = _elm_lang$html$Html$program(
 	{init: _davclark$taichi_site$Main$init, view: _davclark$taichi_site$Main$view, update: _davclark$taichi_site$Main$update, subscriptions: _davclark$taichi_site$Main$subscriptions})();

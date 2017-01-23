@@ -27,27 +27,25 @@ main =
 
 
 type alias Model =
-    { warmup : VidInfo
+    { warmup : Array VidInfo
     , form : Array VidInfo
     , status : String
-    , selected : Int
-    }
-
-
-warmup =
-    { title = "Taichi warmup"
-    , url = "//player.vimeo.com/video/119411037"
+    , selectedForm : Int
+    , selectedWarmup : Int
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { warmup = warmup
+    ( { warmup = empty
       , form = empty
       , status = "Initialized"
-      , selected = 0
+      , selectedForm = 0
+      , selectedWarmup = 0
       }
-    , getClassInfo "current"
+    , Cmd.batch [ getClassInfo NewWarmupInfo "yoga"
+                , getClassInfo NewFormInfo "current"
+                ]
     )
 
 
@@ -56,27 +54,41 @@ init =
 
 
 type Msg
-    = NewVidInfo (Result Http.Error (Array VidInfo))
+    = NewFormInfo (Result Http.Error (Array VidInfo))
+    | NewWarmupInfo (Result Http.Error (Array VidInfo))
     | SetWeek Int
+    | SetWarmup Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SetWeek num ->
-            ( { model | selected = num }, Cmd.none )
+            ( { model | selectedForm = num }, Cmd.none )
 
-        NewVidInfo (Ok jsonData) ->
-            -- Note we always reset selected to 0 here
+        SetWarmup num ->
+            ( { model | selectedWarmup = num }, Cmd.none )
+
+        NewFormInfo (Ok jsonData) ->
+            -- Note we always reset selectedForm to 0 here
             -- Out-of-bounds checking is handled under the view in videoIFrame
-            ( { model | form = jsonData, selected = 0, status = "Updated" }
+            ( { model | form = jsonData, selectedForm = 0, status = "Updated" }
             , Cmd.none
             )
 
-        NewVidInfo (Err msg) ->
+        NewFormInfo (Err msg) ->
             ( { model | status = toString msg }, Cmd.none )
 
 
+        NewWarmupInfo (Ok jsonData) ->
+            -- Note we always reset selectedForm to 0 here
+            -- Out-of-bounds checking is handled under the view in videoIFrame
+            ( { model | warmup = jsonData, selectedWarmup = 0, status = "Updated" }
+            , Cmd.none
+            )
+
+        NewWarmupInfo (Err msg) ->
+            ( { model | status = toString msg }, Cmd.none )
 -- VIEW
 
 
@@ -94,26 +106,26 @@ dispVideos : Model -> Html Msg
 dispVideos model =
     div []
         (List.concat
-          [
-          -- Warmups
-          --   (videoIFrame (Just model.warmup))
+          [ -- Warmups
+            (text "Warmup: "
+              :: List.map (numButton SetWarmup)
+                          (List.range 1 (length model.warmup))
+            )
+          , (videoFile (get model.selectedWarmup model.warmup))
 
-          -- Form
-          -- , (text "Select week: "
-          --     :: List.map weekButton (List.range 1 (length model.form))
-          --   )
-            (videoFile (get model.selected model.form))
-            -- (Just (VidInfo "Week 1: Opening"
-            --              ("//taichi.reallygoodmoving.com" ++
-            --               "/videos/form/01-opening.mp4") )))
+            -- Form
+            -- , (text "Select week: "
+            --     :: List.map numButton (List.range 1 (length model.form))
+            --   )
+          , (videoFile (get model.selectedForm model.form))
           , journal
           ]
         )
 
 
-weekButton : Int -> Html Msg
-weekButton num =
-    button [ onClick (SetWeek (num - 1)) ] [ text (toString num) ]
+numButton : (Int -> Msg) -> Int -> Html Msg
+numButton target num =
+    button [ onClick (target (num - 1)) ] [ text (toString num) ]
 
 journal =
     [ h1 [] [ text "Take credit: Journal your practice!"]
@@ -141,13 +153,13 @@ subscriptions model =
 -- HTTP
 
 
-getClassInfo : String -> Cmd Msg
-getClassInfo session =
+getClassInfo : (Result Http.Error (Array VidInfo) -> Msg) -> String -> Cmd Msg
+getClassInfo msgType session =
     let
         url =
             "/class_info/" ++ session ++ ".json"
     in
-        Http.send NewVidInfo (Http.get url decodeSession )
+        Http.send msgType (Http.get url decodeSession )
 
 
 
