@@ -31,7 +31,6 @@ type alias Model =
     , form : Array VidInfo
     , status : String
     , selected : Int
-    , classVersion : String
     }
 
 
@@ -47,9 +46,8 @@ init =
       , form = empty
       , status = "Initialized"
       , selected = 0
-      , classVersion = "mon+wed"
       }
-    , getClassInfo "mon+wed"
+    , getClassInfo "current"
     )
 
 
@@ -60,7 +58,6 @@ init =
 type Msg
     = NewVidInfo (Result Http.Error (Array VidInfo))
     | SetWeek Int
-    | SwitchClass String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -78,10 +75,6 @@ update msg model =
 
         NewVidInfo (Err msg) ->
             ( { model | status = toString msg }, Cmd.none )
-
-        SwitchClass lab ->
-            ( { model | classVersion = lab }, getClassInfo lab )
-
 
 
 -- VIEW
@@ -104,53 +97,37 @@ dispVideos model =
           [
           -- Warmups
           --   (videoIFrame (Just model.warmup))
-          -- , classMsg
 
           -- Form
           -- , (text "Select week: "
           --     :: List.map weekButton (List.range 1 (length model.form))
           --   )
-            (videoFile (Just (VidInfo "Week 1: Opening"
-                         ("//taichi.reallygoodmoving.com" ++
-                          "/videos/form/01-opening.mp4") )))
-          , [ h1 [] [ text "Take credit: Journal your practice!"]
-            , iframe 
-              [ src ("https://docs.google.com/forms/d/e/" ++
-                     "1FAIpQLSeYzzZNa_3IdwqNRqX1ESqlPdkRaDXuPxA5-iE5kkxx5KEdpw" ++
-                     "/viewform?embedded=true")
-              , attribute "width" "100%"
-              , height 1700
-              , attribute "frameborder" "0"
-              , attribute "marginheight" "0"
-              ]
-              [ text "Loading..." ]
-            ]
+            (videoFile (get model.selected model.form))
+            -- (Just (VidInfo "Week 1: Opening"
+            --              ("//taichi.reallygoodmoving.com" ++
+            --               "/videos/form/01-opening.mp4") )))
+          , journal
           ]
         )
 
-classMsg =
-    [ br [] []
-    , p []
-        [ strong [] [ text "Be sure to select your class below!" ]
-        ]
-    , fieldset []
-        [ classChoice "mon+wed"
-        , classChoice "tue+thu"
-        ]
-    ]
-
-
-classChoice lab =
-    label
-        [ style [ ( "padding", "5px" ) ]
-        ]
-        [ input [ type_ "radio", name "class-session", onClick (SwitchClass lab) ] []
-        , text lab
-        ]
 
 weekButton : Int -> Html Msg
 weekButton num =
     button [ onClick (SetWeek (num - 1)) ] [ text (toString num) ]
+
+journal =
+    [ h1 [] [ text "Take credit: Journal your practice!"]
+      , iframe
+        [ src ("https://docs.google.com/forms/d/e/" ++
+               "1FAIpQLSeYzzZNa_3IdwqNRqX1ESqlPdkRaDXuPxA5-iE5kkxx5KEdpw" ++
+               "/viewform?embedded=true")
+        , attribute "width" "100%"
+        , height 1700
+        , attribute "frameborder" "0"
+        , attribute "marginheight" "0"
+        ]
+        [ text "Loading..." ]
+      ]
 
 -- SUBSCRIPTIONS - currently unused
 

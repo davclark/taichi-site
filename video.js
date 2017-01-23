@@ -9240,6 +9240,53 @@ var _davclark$taichi_site$MyViews$decodeSession = _elm_lang$core$Json_Decode$arr
 var _davclark$taichi_site$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
+var _davclark$taichi_site$Main$journal = {
+	ctor: '::',
+	_0: A2(
+		_elm_lang$html$Html$h1,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Take credit: Journal your practice!'),
+			_1: {ctor: '[]'}
+		}),
+	_1: {
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$iframe,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$src(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'https://docs.google.com/forms/d/e/',
+						A2(_elm_lang$core$Basics_ops['++'], '1FAIpQLSeYzzZNa_3IdwqNRqX1ESqlPdkRaDXuPxA5-iE5kkxx5KEdpw', '/viewform?embedded=true'))),
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'width', '100%'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$height(1700),
+						_1: {
+							ctor: '::',
+							_0: A2(_elm_lang$html$Html_Attributes$attribute, 'frameborder', '0'),
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_lang$html$Html_Attributes$attribute, 'marginheight', '0'),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Loading...'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	}
+};
 var _davclark$taichi_site$Main$dispVideos = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -9248,60 +9295,10 @@ var _davclark$taichi_site$Main$dispVideos = function (model) {
 			{
 				ctor: '::',
 				_0: _davclark$taichi_site$MyViews$videoFile(
-					_elm_lang$core$Maybe$Just(
-						A2(
-							_davclark$taichi_site$MyViews$VidInfo,
-							'Week 1: Opening',
-							A2(_elm_lang$core$Basics_ops['++'], '//taichi.reallygoodmoving.com', '/videos/form/01-opening.mp4')))),
+					A2(_elm_lang$core$Array$get, model.selected, model.form)),
 				_1: {
 					ctor: '::',
-					_0: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$h1,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('Take credit: Journal your practice!'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$iframe,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$src(
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											'https://docs.google.com/forms/d/e/',
-											A2(_elm_lang$core$Basics_ops['++'], '1FAIpQLSeYzzZNa_3IdwqNRqX1ESqlPdkRaDXuPxA5-iE5kkxx5KEdpw', '/viewform?embedded=true'))),
-									_1: {
-										ctor: '::',
-										_0: A2(_elm_lang$html$Html_Attributes$attribute, 'width', '100%'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$height(1700),
-											_1: {
-												ctor: '::',
-												_0: A2(_elm_lang$html$Html_Attributes$attribute, 'frameborder', '0'),
-												_1: {
-													ctor: '::',
-													_0: A2(_elm_lang$html$Html_Attributes$attribute, 'marginheight', '0'),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Loading...'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					},
+					_0: _davclark$taichi_site$Main$journal,
 					_1: {ctor: '[]'}
 				}
 			}));
@@ -9314,94 +9311,44 @@ var _davclark$taichi_site$Main$view = function (model) {
 		return _elm_lang$html$Html$text(model.status);
 	}
 };
-var _davclark$taichi_site$Main$warmup = {title: 'Taichi warmup', url: '//player.vimeo.com/video/119411037'};
-var _davclark$taichi_site$Main$Model = F5(
-	function (a, b, c, d, e) {
-		return {warmup: a, form: b, status: c, selected: d, classVersion: e};
-	});
-var _davclark$taichi_site$Main$SwitchClass = function (a) {
-	return {ctor: 'SwitchClass', _0: a};
-};
-var _davclark$taichi_site$Main$classChoice = function (lab) {
-	return A2(
-		_elm_lang$html$Html$label,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'padding', _1: '5px'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$input,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$type_('radio'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$name('class-session'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(
-								_davclark$taichi_site$Main$SwitchClass(lab)),
-							_1: {ctor: '[]'}
-						}
-					}
-				},
-				{ctor: '[]'}),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(lab),
-				_1: {ctor: '[]'}
+var _davclark$taichi_site$Main$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		if (_p1.ctor === 'SetWeek') {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{selected: _p1._0}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		} else {
+			if (_p1._0.ctor === 'Ok') {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{form: _p1._0._0, selected: 0, status: 'Updated'}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			} else {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							status: _elm_lang$core$Basics$toString(_p1._0._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			}
-		});
-};
-var _davclark$taichi_site$Main$classMsg = {
-	ctor: '::',
-	_0: A2(
-		_elm_lang$html$Html$br,
-		{ctor: '[]'},
-		{ctor: '[]'}),
-	_1: {
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$p,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$strong,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Be sure to select your class below!'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$fieldset,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _davclark$taichi_site$Main$classChoice('mon+wed'),
-					_1: {
-						ctor: '::',
-						_0: _davclark$taichi_site$Main$classChoice('tue+thu'),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
 		}
-	}
-};
+	});
+var _davclark$taichi_site$Main$warmup = {title: 'Taichi warmup', url: '//player.vimeo.com/video/119411037'};
+var _davclark$taichi_site$Main$Model = F4(
+	function (a, b, c, d) {
+		return {warmup: a, form: b, status: c, selected: d};
+	});
 var _davclark$taichi_site$Main$SetWeek = function (a) {
 	return {ctor: 'SetWeek', _0: a};
 };
@@ -9436,52 +9383,9 @@ var _davclark$taichi_site$Main$getClassInfo = function (session) {
 };
 var _davclark$taichi_site$Main$init = {
 	ctor: '_Tuple2',
-	_0: {warmup: _davclark$taichi_site$Main$warmup, form: _elm_lang$core$Array$empty, status: 'Initialized', selected: 0, classVersion: 'mon+wed'},
-	_1: _davclark$taichi_site$Main$getClassInfo('mon+wed')
+	_0: {warmup: _davclark$taichi_site$Main$warmup, form: _elm_lang$core$Array$empty, status: 'Initialized', selected: 0},
+	_1: _davclark$taichi_site$Main$getClassInfo('current')
 };
-var _davclark$taichi_site$Main$update = F2(
-	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
-			case 'SetWeek':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{selected: _p1._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'NewVidInfo':
-				if (_p1._0.ctor === 'Ok') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{form: _p1._0._0, selected: 0, status: 'Updated'}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								status: _elm_lang$core$Basics$toString(_p1._0._0)
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			default:
-				var _p2 = _p1._0;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{classVersion: _p2}),
-					_1: _davclark$taichi_site$Main$getClassInfo(_p2)
-				};
-		}
-	});
 var _davclark$taichi_site$Main$main = _elm_lang$html$Html$program(
 	{init: _davclark$taichi_site$Main$init, view: _davclark$taichi_site$Main$view, update: _davclark$taichi_site$Main$update, subscriptions: _davclark$taichi_site$Main$subscriptions})();
 
