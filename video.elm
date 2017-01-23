@@ -6,6 +6,9 @@ import Html.Attributes
         ( name
         , style
         , type_
+        , src
+        , attribute
+        , height
         )
 import Html.Events exposing (onClick)
 import Http
@@ -98,19 +101,31 @@ dispVideos : Model -> Html Msg
 dispVideos model =
     div []
         (List.concat
-            [
-            -- Warmups
-            --   (videoIFrame (Just model.warmup))
-            -- , classMsg
+          [
+          -- Warmups
+          --   (videoIFrame (Just model.warmup))
+          -- , classMsg
 
-            -- Form
-            -- , (text "Select week: "
-            --     :: List.map weekButton (List.range 1 (length model.form))
-            --   )
-              (videoFile (Just (VidInfo "Week 1: Opening"
-                           ("//taichi.reallygoodmoving.com" ++
-                            "/videos/form/01-opening.mp4") )))
+          -- Form
+          -- , (text "Select week: "
+          --     :: List.map weekButton (List.range 1 (length model.form))
+          --   )
+            (videoFile (Just (VidInfo "Week 1: Opening"
+                         ("//taichi.reallygoodmoving.com" ++
+                          "/videos/form/01-opening.mp4") )))
+          , [ h1 [] [ text "Take credit: Journal your practice!"]
+            , iframe 
+              [ src ("https://docs.google.com/forms/d/e/" ++
+                     "1FAIpQLSeYzzZNa_3IdwqNRqX1ESqlPdkRaDXuPxA5-iE5kkxx5KEdpw" ++
+                     "/viewform?embedded=true")
+              , attribute "width" "100%"
+              , height 1700
+              , attribute "frameborder" "0"
+              , attribute "marginheight" "0"
+              ]
+              [ text "Loading..." ]
             ]
+          ]
         )
 
 classMsg =

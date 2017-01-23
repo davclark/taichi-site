@@ -9253,7 +9253,57 @@ var _davclark$taichi_site$Main$dispVideos = function (model) {
 							_davclark$taichi_site$MyViews$VidInfo,
 							'Week 1: Opening',
 							A2(_elm_lang$core$Basics_ops['++'], '//taichi.reallygoodmoving.com', '/videos/form/01-opening.mp4')))),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$h1,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Take credit: Journal your practice!'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$iframe,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$src(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'https://docs.google.com/forms/d/e/',
+											A2(_elm_lang$core$Basics_ops['++'], '1FAIpQLSeYzzZNa_3IdwqNRqX1ESqlPdkRaDXuPxA5-iE5kkxx5KEdpw', '/viewform?embedded=true'))),
+									_1: {
+										ctor: '::',
+										_0: A2(_elm_lang$html$Html_Attributes$attribute, 'width', '100%'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$height(1700),
+											_1: {
+												ctor: '::',
+												_0: A2(_elm_lang$html$Html_Attributes$attribute, 'frameborder', '0'),
+												_1: {
+													ctor: '::',
+													_0: A2(_elm_lang$html$Html_Attributes$attribute, 'marginheight', '0'),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Loading...'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					},
+					_1: {ctor: '[]'}
+				}
 			}));
 };
 var _davclark$taichi_site$Main$view = function (model) {
