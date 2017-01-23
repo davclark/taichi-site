@@ -1,10 +1,10 @@
 serve: index.html elm
 	bundle exec jekyll serve
 
-jekyll-build: index.html
+deploy: index.html
 	bundle exec jekyll build --destination ../taichi.reallygoodmoving.com
 
-build: index.html elm
+build-all: index.html elm
 	bundle exec jekyll build
 
 elm: video.js video-late-2016.js
