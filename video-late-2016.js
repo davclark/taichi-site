@@ -9109,48 +9109,93 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
-var _davclark$taichi_site$MyViews$videoFile = function (maybe_info) {
-	var _p0 = maybe_info;
-	if (_p0.ctor === 'Nothing') {
-		return {
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('No (valid) video number selected'),
-			_1: {ctor: '[]'}
-		};
-	} else {
-		var _p1 = _p0._0;
-		return {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$h2,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(_p1.title),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
+var _davclark$taichi_site$MyViews$maybeAutoplay = function (aYep) {
+	return aYep ? {
+		ctor: '::',
+		_0: A2(_elm_lang$html$Html_Attributes$attribute, 'autoplay', ''),
+		_1: {ctor: '[]'}
+	} : {ctor: '[]'};
+};
+var _davclark$taichi_site$MyViews$onPause = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'pause',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _davclark$taichi_site$MyViews$onPlaying = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'playing',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _davclark$taichi_site$MyViews$videoFile = F2(
+	function (vidModel, playingMsg) {
+		var maybe_info = A2(_elm_lang$core$Array$get, vidModel.selected, vidModel.videos);
+		var _p0 = maybe_info;
+		if (_p0.ctor === 'Nothing') {
+			return {
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('No (valid) video number selected'),
+				_1: {ctor: '[]'}
+			};
+		} else {
+			var _p1 = _p0._0;
+			return {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$video,
+					_elm_lang$html$Html$h2,
+					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$src(_p1.url),
-						_1: {
-							ctor: '::',
-							_0: A2(_elm_lang$html$Html_Attributes$attribute, 'controls', ''),
-							_1: {
+						_0: _elm_lang$html$Html$text(_p1.title),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$video,
+						A2(
+							_elm_lang$core$List$append,
+							{
 								ctor: '::',
-								_0: A2(_elm_lang$html$Html_Attributes$attribute, 'width', '100%'),
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {ctor: '[]'}
-			}
-		};
-	}
+								_0: A2(_elm_lang$html$Html_Attributes$attribute, 'controls', ''),
+								_1: {
+									ctor: '::',
+									_0: A2(_elm_lang$html$Html_Attributes$attribute, 'width', '100%'),
+									_1: {
+										ctor: '::',
+										_0: _davclark$taichi_site$MyViews$onPlaying(playingMsg),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							_davclark$taichi_site$MyViews$maybeAutoplay(vidModel.playing)),
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$source,
+								{
+									ctor: '::',
+									_0: A2(_elm_lang$html$Html_Attributes$attribute, 'src', _p1.url),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$type_('video/mp4'),
+										_1: {ctor: '[]'}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			};
+		}
+	});
+var _davclark$taichi_site$MyViews$onEnded = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'ended',
+		_elm_lang$core$Json_Decode$succeed(msg));
 };
 var _davclark$taichi_site$MyViews$videoIFrame = function (maybe_info) {
 	var _p2 = maybe_info;
@@ -9222,6 +9267,11 @@ var _davclark$taichi_site$MyViews$videoIFrame = function (maybe_info) {
 		};
 	}
 };
+var _davclark$taichi_site$MyViews$initVidModel = {videos: _elm_lang$core$Array$empty, selected: 0, playing: false};
+var _davclark$taichi_site$MyViews$VidModel = F3(
+	function (a, b, c) {
+		return {videos: a, selected: b, playing: c};
+	});
 var _davclark$taichi_site$MyViews$VidInfo = F2(
 	function (a, b) {
 		return {title: a, url: b};

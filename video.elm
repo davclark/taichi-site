@@ -15,7 +15,8 @@ import Http
 
 import Array exposing (Array, get, length, empty)
 
-import MyViews exposing (VidInfo, decodeSession, videoFile)
+import MyViews exposing (VidInfo, VidModel, initVidModel,
+                         decodeSession, videoFile)
 
 main =
     Html.program
@@ -27,28 +28,16 @@ main =
 
 
 type alias Model =
-    { warmup :
-        { videos : Array VidInfo
-        , selected : Int
-        }
-    , form :
-        { videos : Array VidInfo
-        , selected : Int
-        }
+    { warmup : VidModel
+    , form : VidModel
     , status : String
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { warmup =
-        { videos = empty
-        , selected = 0
-        }
-      , form =
-        { videos = empty
-        , selected = 0
-        }
+    ( { warmup = initVidModel
+      , form = initVidModel
       , status = "Initialized"
       }
     , Cmd.batch [ getClassInfo NewWarmupInfo "yoga"
@@ -66,6 +55,7 @@ type Msg
     | NewWarmupInfo (Result Http.Error (Array VidInfo))
     | SetWeek Int
     | SetWarmup Int
+    | WarmupPlaying
 
 updateSelected subModel num =
     {subModel | selected = num }
@@ -75,6 +65,9 @@ updateVideos subModel videos =
     -- We also reset selected to the first video
     -- Out-of-bounds checking is handled under the view in videoIFrame
     { subModel | videos = videos, selected = 0 }
+
+updatePlaying subModel playing =
+    { subModel | playing = playing }
  
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -104,6 +97,9 @@ update msg model =
 
         NewWarmupInfo (Err msg) ->
             ( { model | status = toString msg }, Cmd.none )
+
+        WarmupPlaying ->
+            ( { model | warmup = updatePlaying model.warmup True } , Cmd.none)
 -- VIEW
 
 
@@ -126,13 +122,13 @@ dispVideos model =
               :: List.map (numButton SetWarmup)
                           (List.range 1 (length model.warmup.videos))
             )
-          , (videoFile (get model.warmup.selected model.warmup.videos))
+          , (videoFile model.warmup WarmupPlaying)
 
             -- Form
             -- , (text "Select week: "
             --     :: List.map numButton (List.range 1 (length model.form))
             --   )
-          , (videoFile (get model.form.selected model.form.videos))
+          , (videoFile model.form WarmupPlaying)
           , journal
           ]
         )
