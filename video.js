@@ -9315,6 +9315,18 @@ var _davclark$taichi_site$Main$numButton = F2(
 				_1: {ctor: '[]'}
 			});
 	});
+var _davclark$taichi_site$Main$updateVideos = F2(
+	function (subModel, videos) {
+		return _elm_lang$core$Native_Utils.update(
+			subModel,
+			{videos: videos, selected: 0});
+	});
+var _davclark$taichi_site$Main$updateSelected = F2(
+	function (subModel, num) {
+		return _elm_lang$core$Native_Utils.update(
+			subModel,
+			{selected: num});
+	});
 var _davclark$taichi_site$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
@@ -9324,7 +9336,9 @@ var _davclark$taichi_site$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{selectedForm: _p0._0}),
+						{
+							form: A2(_davclark$taichi_site$Main$updateSelected, model.form, _p0._0)
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetWarmup':
@@ -9332,7 +9346,9 @@ var _davclark$taichi_site$Main$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{selectedWarmup: _p0._0}),
+						{
+							warmup: A2(_davclark$taichi_site$Main$updateSelected, model.warmup, _p0._0)
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'NewFormInfo':
@@ -9341,7 +9357,10 @@ var _davclark$taichi_site$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{form: _p0._0._0, selectedForm: 0, status: 'Updated'}),
+							{
+								form: A2(_davclark$taichi_site$Main$updateVideos, model.form, _p0._0._0),
+								status: 'Updated'
+							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
@@ -9361,7 +9380,10 @@ var _davclark$taichi_site$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{warmup: _p0._0._0, selectedWarmup: 0, status: 'Updated'}),
+							{
+								warmup: A2(_davclark$taichi_site$Main$updateVideos, model.warmup, _p0._0._0),
+								status: 'Updated'
+							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
@@ -9377,9 +9399,9 @@ var _davclark$taichi_site$Main$update = F2(
 				}
 		}
 	});
-var _davclark$taichi_site$Main$Model = F5(
-	function (a, b, c, d, e) {
-		return {warmup: a, form: b, status: c, selectedForm: d, selectedWarmup: e};
+var _davclark$taichi_site$Main$Model = F3(
+	function (a, b, c) {
+		return {warmup: a, form: b, status: c};
 	});
 var _davclark$taichi_site$Main$SetWarmup = function (a) {
 	return {ctor: 'SetWarmup', _0: a};
@@ -9400,16 +9422,16 @@ var _davclark$taichi_site$Main$dispVideos = function (model) {
 						A2(
 							_elm_lang$core$List$range,
 							1,
-							_elm_lang$core$Array$length(model.warmup)))
+							_elm_lang$core$Array$length(model.warmup.videos)))
 				},
 				_1: {
 					ctor: '::',
 					_0: _davclark$taichi_site$MyViews$videoFile(
-						A2(_elm_lang$core$Array$get, model.selectedWarmup, model.warmup)),
+						A2(_elm_lang$core$Array$get, model.warmup.selected, model.warmup.videos)),
 					_1: {
 						ctor: '::',
 						_0: _davclark$taichi_site$MyViews$videoFile(
-							A2(_elm_lang$core$Array$get, model.selectedForm, model.form)),
+							A2(_elm_lang$core$Array$get, model.form.selected, model.form.videos)),
 						_1: {
 							ctor: '::',
 							_0: _davclark$taichi_site$Main$journal,
@@ -9438,7 +9460,11 @@ var _davclark$taichi_site$Main$NewFormInfo = function (a) {
 };
 var _davclark$taichi_site$Main$init = {
 	ctor: '_Tuple2',
-	_0: {warmup: _elm_lang$core$Array$empty, form: _elm_lang$core$Array$empty, status: 'Initialized', selectedForm: 0, selectedWarmup: 0},
+	_0: {
+		warmup: {videos: _elm_lang$core$Array$empty, selected: 0},
+		form: {videos: _elm_lang$core$Array$empty, selected: 0},
+		status: 'Initialized'
+	},
 	_1: _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',

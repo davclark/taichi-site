@@ -27,21 +27,29 @@ main =
 
 
 type alias Model =
-    { warmup : Array VidInfo
-    , form : Array VidInfo
+    { warmup :
+        { videos : Array VidInfo
+        , selected : Int
+        }
+    , form :
+        { videos : Array VidInfo
+        , selected : Int
+        }
     , status : String
-    , selectedForm : Int
-    , selectedWarmup : Int
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { warmup = empty
-      , form = empty
+    ( { warmup =
+        { videos = empty
+        , selected = 0
+        }
+      , form =
+        { videos = empty
+        , selected = 0
+        }
       , status = "Initialized"
-      , selectedForm = 0
-      , selectedWarmup = 0
       }
     , Cmd.batch [ getClassInfo NewWarmupInfo "yoga"
                 , getClassInfo NewFormInfo "current"
@@ -59,33 +67,40 @@ type Msg
     | SetWeek Int
     | SetWarmup Int
 
+updateSelected subModel num =
+    {subModel | selected = num }
 
+
+updateVideos subModel videos =
+    -- We also reset selected to the first video
+    -- Out-of-bounds checking is handled under the view in videoIFrame
+    { subModel | videos = videos, selected = 0 }
+ 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SetWeek num ->
-            ( { model | selectedForm = num }, Cmd.none )
+            ( { model | form = updateSelected model.form num }, Cmd.none )
 
         SetWarmup num ->
-            ( { model | selectedWarmup = num }, Cmd.none )
+            ( { model | warmup = updateSelected model.warmup num }, Cmd.none )
 
         NewFormInfo (Ok jsonData) ->
-            -- Note we always reset selectedForm to 0 here
-            -- Out-of-bounds checking is handled under the view in videoIFrame
-            ( { model | form = jsonData, selectedForm = 0, status = "Updated" }
+            ( { model | form = updateVideos model.form jsonData
+              , status = "Updated"
+              }
+            , Cmd.none
+            )
+
+        NewWarmupInfo (Ok jsonData) ->
+            ( { model | warmup = updateVideos model.warmup jsonData
+              , status = "Updated"
+              }
             , Cmd.none
             )
 
         NewFormInfo (Err msg) ->
             ( { model | status = toString msg }, Cmd.none )
-
-
-        NewWarmupInfo (Ok jsonData) ->
-            -- Note we always reset selectedForm to 0 here
-            -- Out-of-bounds checking is handled under the view in videoIFrame
-            ( { model | warmup = jsonData, selectedWarmup = 0, status = "Updated" }
-            , Cmd.none
-            )
 
         NewWarmupInfo (Err msg) ->
             ( { model | status = toString msg }, Cmd.none )
@@ -109,15 +124,15 @@ dispVideos model =
           [ -- Warmups
             (text "Warmup: "
               :: List.map (numButton SetWarmup)
-                          (List.range 1 (length model.warmup))
+                          (List.range 1 (length model.warmup.videos))
             )
-          , (videoFile (get model.selectedWarmup model.warmup))
+          , (videoFile (get model.warmup.selected model.warmup.videos))
 
             -- Form
             -- , (text "Select week: "
             --     :: List.map numButton (List.range 1 (length model.form))
             --   )
-          , (videoFile (get model.selectedForm model.form))
+          , (videoFile (get model.form.selected model.form.videos))
           , journal
           ]
         )
@@ -160,6 +175,3 @@ getClassInfo msgType session =
             "/class_info/" ++ session ++ ".json"
     in
         Http.send msgType (Http.get url decodeSession )
-
-
-
