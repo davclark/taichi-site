@@ -9109,104 +9109,41 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
-var _davclark$taichi_site$MyViews$maybeAutoplay = function (aYep) {
+var _davclark$taichi_site$MyVideo$maybeAutoplay = function (aYep) {
 	return aYep ? {
 		ctor: '::',
 		_0: A2(_elm_lang$html$Html_Attributes$attribute, 'autoplay', ''),
 		_1: {ctor: '[]'}
 	} : {ctor: '[]'};
 };
-var _davclark$taichi_site$MyViews$onPause = function (msg) {
+var _davclark$taichi_site$MyVideo$onPause = function (msg) {
 	return A2(
 		_elm_lang$html$Html_Events$on,
 		'pause',
 		_elm_lang$core$Json_Decode$succeed(msg));
 };
-var _davclark$taichi_site$MyViews$onPlaying = function (msg) {
+var _davclark$taichi_site$MyVideo$onPlaying = function (msg) {
 	return A2(
 		_elm_lang$html$Html_Events$on,
 		'playing',
 		_elm_lang$core$Json_Decode$succeed(msg));
 };
-var _davclark$taichi_site$MyViews$videoFile = F2(
-	function (vidModel, playingMsg) {
-		var maybe_info = A2(_elm_lang$core$Array$get, vidModel.selected, vidModel.videos);
-		var _p0 = maybe_info;
-		if (_p0.ctor === 'Nothing') {
-			return {
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('No (valid) video number selected'),
-				_1: {ctor: '[]'}
-			};
-		} else {
-			var _p1 = _p0._0;
-			return {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$h2,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(_p1.title),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$video,
-						A2(
-							_elm_lang$core$List$append,
-							{
-								ctor: '::',
-								_0: A2(_elm_lang$html$Html_Attributes$attribute, 'controls', ''),
-								_1: {
-									ctor: '::',
-									_0: A2(_elm_lang$html$Html_Attributes$attribute, 'width', '100%'),
-									_1: {
-										ctor: '::',
-										_0: _davclark$taichi_site$MyViews$onPlaying(playingMsg),
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							_davclark$taichi_site$MyViews$maybeAutoplay(vidModel.playing)),
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$source,
-								{
-									ctor: '::',
-									_0: A2(_elm_lang$html$Html_Attributes$attribute, 'src', _p1.url),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$type_('video/mp4'),
-										_1: {ctor: '[]'}
-									}
-								},
-								{ctor: '[]'}),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			};
-		}
-	});
-var _davclark$taichi_site$MyViews$onEnded = function (msg) {
+var _davclark$taichi_site$MyVideo$onEnded = function (msg) {
 	return A2(
 		_elm_lang$html$Html_Events$on,
 		'ended',
 		_elm_lang$core$Json_Decode$succeed(msg));
 };
-var _davclark$taichi_site$MyViews$videoIFrame = function (maybe_info) {
-	var _p2 = maybe_info;
-	if (_p2.ctor === 'Nothing') {
+var _davclark$taichi_site$MyVideo$videoIFrame = function (maybe_info) {
+	var _p0 = maybe_info;
+	if (_p0.ctor === 'Nothing') {
 		return {
 			ctor: '::',
 			_0: _elm_lang$html$Html$text('No (valid) video number selected'),
 			_1: {ctor: '[]'}
 		};
 	} else {
-		var _p3 = _p2._0;
+		var _p1 = _p0._0;
 		return {
 			ctor: '::',
 			_0: A2(
@@ -9214,7 +9151,7 @@ var _davclark$taichi_site$MyViews$videoIFrame = function (maybe_info) {
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text(_p3.title),
+					_0: _elm_lang$html$Html$text(_p1.title),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -9232,7 +9169,7 @@ var _davclark$taichi_site$MyViews$videoIFrame = function (maybe_info) {
 							_elm_lang$html$Html$iframe,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$src(_p3.url),
+								_0: _elm_lang$html$Html_Attributes$src(_p1.url),
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$width(500),
@@ -9267,16 +9204,58 @@ var _davclark$taichi_site$MyViews$videoIFrame = function (maybe_info) {
 		};
 	}
 };
-var _davclark$taichi_site$MyViews$initVidModel = {videos: _elm_lang$core$Array$empty, selected: 0, playing: false};
-var _davclark$taichi_site$MyViews$VidModel = F3(
-	function (a, b, c) {
-		return {videos: a, selected: b, playing: c};
+var _davclark$taichi_site$MyVideo$update = F2(
+	function (msg, model) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
+			case 'SetVidNum':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{selected: _p2._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'NewVidInfo':
+				if (_p2._0.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{videos: _p2._0._0, status: 'Updated'}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								status: _elm_lang$core$Basics$toString(_p2._0._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{playing: _p2._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
 	});
-var _davclark$taichi_site$MyViews$VidInfo = F2(
+var _davclark$taichi_site$MyVideo$init = {videos: _elm_lang$core$Array$empty, selected: 0, status: 'Initialized', playing: false};
+var _davclark$taichi_site$MyVideo$Model = F4(
+	function (a, b, c, d) {
+		return {videos: a, selected: b, status: c, playing: d};
+	});
+var _davclark$taichi_site$MyVideo$VidInfo = F2(
 	function (a, b) {
 		return {title: a, url: b};
 	});
-var _davclark$taichi_site$MyViews$decodeSession = _elm_lang$core$Json_Decode$array(
+var _davclark$taichi_site$MyVideo$decodeSession = _elm_lang$core$Json_Decode$array(
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 		'url',
@@ -9285,19 +9264,113 @@ var _davclark$taichi_site$MyViews$decodeSession = _elm_lang$core$Json_Decode$arr
 			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 			'title',
 			_elm_lang$core$Json_Decode$string,
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_davclark$taichi_site$MyViews$VidInfo))));
-
-var _davclark$taichi_site$Main$getClassInfo = F2(
-	function (msgType, session) {
-		var url = A2(
-			_elm_lang$core$Basics_ops['++'],
-			'/class_info/',
-			A2(_elm_lang$core$Basics_ops['++'], session, '.json'));
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_davclark$taichi_site$MyVideo$VidInfo))));
+var _davclark$taichi_site$MyVideo$VidPlaying = function (a) {
+	return {ctor: 'VidPlaying', _0: a};
+};
+var _davclark$taichi_site$MyVideo$videoFile = function (vidModel) {
+	var maybe_info = A2(_elm_lang$core$Array$get, vidModel.selected, vidModel.videos);
+	var _p3 = maybe_info;
+	if (_p3.ctor === 'Nothing') {
+		return {
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('No (valid) video number selected'),
+			_1: {ctor: '[]'}
+		};
+	} else {
+		var _p4 = _p3._0;
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(_p4.title),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$video,
+					A2(
+						_elm_lang$core$List$append,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$src(_p4.url),
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_lang$html$Html_Attributes$attribute, 'controls', ''),
+								_1: {
+									ctor: '::',
+									_0: A2(_elm_lang$html$Html_Attributes$attribute, 'width', '100%'),
+									_1: {
+										ctor: '::',
+										_0: _davclark$taichi_site$MyVideo$onPlaying(
+											_davclark$taichi_site$MyVideo$VidPlaying(true)),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						},
+						_davclark$taichi_site$MyVideo$maybeAutoplay(vidModel.playing)),
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		};
+	}
+};
+var _davclark$taichi_site$MyVideo$view = function (model) {
+	var _p5 = model.status;
+	if (_p5 === 'Updated') {
 		return A2(
-			_elm_lang$http$Http$send,
-			msgType,
-			A2(_elm_lang$http$Http$get, url, _davclark$taichi_site$MyViews$decodeSession));
-	});
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			_davclark$taichi_site$MyVideo$videoFile(model));
+	} else {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(model.status),
+				_1: {ctor: '[]'}
+			});
+	}
+};
+var _davclark$taichi_site$MyVideo$SetVidNum = function (a) {
+	return {ctor: 'SetVidNum', _0: a};
+};
+var _davclark$taichi_site$MyVideo$numButton = function (num) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(
+				_davclark$taichi_site$MyVideo$SetVidNum(num - 1)),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				_elm_lang$core$Basics$toString(num)),
+			_1: {ctor: '[]'}
+		});
+};
+var _davclark$taichi_site$MyVideo$NewVidInfo = function (a) {
+	return {ctor: 'NewVidInfo', _0: a};
+};
+var _davclark$taichi_site$MyVideo$getClassInfo = function (session) {
+	var url = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'/class_info/',
+		A2(_elm_lang$core$Basics_ops['++'], session, '.json'));
+	return A2(
+		_elm_lang$http$Http$send,
+		_davclark$taichi_site$MyVideo$NewVidInfo,
+		A2(_elm_lang$http$Http$get, url, _davclark$taichi_site$MyVideo$decodeSession));
+};
+
 var _davclark$taichi_site$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
@@ -9348,132 +9421,64 @@ var _davclark$taichi_site$Main$journal = {
 		_1: {ctor: '[]'}
 	}
 };
-var _davclark$taichi_site$Main$numButton = F2(
-	function (target, num) {
-		return A2(
-			_elm_lang$html$Html$button,
-			{
+var _davclark$taichi_site$Main$Model = F2(
+	function (a, b) {
+		return {warmup: a, form: b};
+	});
+var _davclark$taichi_site$Main$FormMsg = function (a) {
+	return {ctor: 'FormMsg', _0: a};
+};
+var _davclark$taichi_site$Main$WarmupMsg = function (a) {
+	return {ctor: 'WarmupMsg', _0: a};
+};
+var _davclark$taichi_site$Main$init = {
+	ctor: '_Tuple2',
+	_0: {warmup: _davclark$taichi_site$MyVideo$init, form: _davclark$taichi_site$MyVideo$init},
+	_1: _elm_lang$core$Platform_Cmd$batch(
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$core$Platform_Cmd$map,
+				_davclark$taichi_site$Main$WarmupMsg,
+				_davclark$taichi_site$MyVideo$getClassInfo('yoga')),
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(
-					target(num - 1)),
+				_0: A2(
+					_elm_lang$core$Platform_Cmd$map,
+					_davclark$taichi_site$Main$FormMsg,
+					_davclark$taichi_site$MyVideo$getClassInfo('current')),
 				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(
-					_elm_lang$core$Basics$toString(num)),
-				_1: {ctor: '[]'}
-			});
-	});
-var _davclark$taichi_site$Main$updatePlaying = F2(
-	function (subModel, playing) {
-		return _elm_lang$core$Native_Utils.update(
-			subModel,
-			{playing: playing});
-	});
-var _davclark$taichi_site$Main$updateVideos = F2(
-	function (subModel, videos) {
-		return _elm_lang$core$Native_Utils.update(
-			subModel,
-			{videos: videos, selected: 0});
-	});
-var _davclark$taichi_site$Main$updateSelected = F2(
-	function (subModel, num) {
-		return _elm_lang$core$Native_Utils.update(
-			subModel,
-			{selected: num});
-	});
+			}
+		})
+};
 var _davclark$taichi_site$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'SetWeek':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							form: A2(_davclark$taichi_site$Main$updateSelected, model.form, _p0._0)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'SetWarmup':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							warmup: A2(_davclark$taichi_site$Main$updateSelected, model.warmup, _p0._0)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'NewFormInfo':
-				if (_p0._0.ctor === 'Ok') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								form: A2(_davclark$taichi_site$Main$updateVideos, model.form, _p0._0._0),
-								status: 'Updated'
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								status: _elm_lang$core$Basics$toString(_p0._0._0)
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			case 'NewWarmupInfo':
-				if (_p0._0.ctor === 'Ok') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								warmup: A2(_davclark$taichi_site$Main$updateVideos, model.warmup, _p0._0._0),
-								status: 'Updated'
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								status: _elm_lang$core$Basics$toString(_p0._0._0)
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							warmup: A2(_davclark$taichi_site$Main$updatePlaying, model.warmup, true)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+		if (_p0.ctor === 'WarmupMsg') {
+			var _p1 = A2(_davclark$taichi_site$MyVideo$update, _p0._0, model.warmup);
+			var updatedWarmupModel = _p1._0;
+			var warmupCmd = _p1._1;
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{warmup: updatedWarmupModel}),
+				_1: A2(_elm_lang$core$Platform_Cmd$map, _davclark$taichi_site$Main$WarmupMsg, warmupCmd)
+			};
+		} else {
+			var _p2 = A2(_davclark$taichi_site$MyVideo$update, _p0._0, model.form);
+			var updatedFormModel = _p2._0;
+			var formCmd = _p2._1;
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{form: updatedFormModel}),
+				_1: A2(_elm_lang$core$Platform_Cmd$map, _davclark$taichi_site$Main$FormMsg, formCmd)
+			};
 		}
 	});
-var _davclark$taichi_site$Main$Model = F3(
-	function (a, b, c) {
-		return {warmup: a, form: b, status: c};
-	});
-var _davclark$taichi_site$Main$WarmupPlaying = {ctor: 'WarmupPlaying'};
-var _davclark$taichi_site$Main$SetWarmup = function (a) {
-	return {ctor: 'SetWarmup', _0: a};
-};
-var _davclark$taichi_site$Main$dispVideos = function (model) {
+var _davclark$taichi_site$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -9483,59 +9488,51 @@ var _davclark$taichi_site$Main$dispVideos = function (model) {
 				_0: {
 					ctor: '::',
 					_0: _elm_lang$html$Html$text('Warmup: '),
-					_1: A2(
-						_elm_lang$core$List$map,
-						_davclark$taichi_site$Main$numButton(_davclark$taichi_site$Main$SetWarmup),
-						A2(
-							_elm_lang$core$List$range,
-							1,
-							_elm_lang$core$Array$length(model.warmup.videos)))
+					_1: {ctor: '[]'}
 				},
 				_1: {
 					ctor: '::',
-					_0: A2(_davclark$taichi_site$MyViews$videoFile, model.warmup, _davclark$taichi_site$Main$WarmupPlaying),
+					_0: A2(
+						_elm_lang$core$List$map,
+						function (num) {
+							return A2(
+								_elm_lang$html$Html$map,
+								_davclark$taichi_site$Main$WarmupMsg,
+								_davclark$taichi_site$MyVideo$numButton(num));
+						},
+						A2(
+							_elm_lang$core$List$range,
+							1,
+							_elm_lang$core$Array$length(model.warmup.videos))),
 					_1: {
 						ctor: '::',
-						_0: A2(_davclark$taichi_site$MyViews$videoFile, model.form, _davclark$taichi_site$Main$WarmupPlaying),
+						_0: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$map,
+								_davclark$taichi_site$Main$WarmupMsg,
+								_davclark$taichi_site$MyVideo$view(model.warmup)),
+							_1: {ctor: '[]'}
+						},
 						_1: {
 							ctor: '::',
-							_0: _davclark$taichi_site$Main$journal,
-							_1: {ctor: '[]'}
+							_0: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$map,
+									_davclark$taichi_site$Main$FormMsg,
+									_davclark$taichi_site$MyVideo$view(model.form)),
+								_1: {ctor: '[]'}
+							},
+							_1: {
+								ctor: '::',
+								_0: _davclark$taichi_site$Main$journal,
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
 			}));
-};
-var _davclark$taichi_site$Main$view = function (model) {
-	var _p1 = model.status;
-	if (_p1 === 'Updated') {
-		return _davclark$taichi_site$Main$dispVideos(model);
-	} else {
-		return _elm_lang$html$Html$text(model.status);
-	}
-};
-var _davclark$taichi_site$Main$SetWeek = function (a) {
-	return {ctor: 'SetWeek', _0: a};
-};
-var _davclark$taichi_site$Main$NewWarmupInfo = function (a) {
-	return {ctor: 'NewWarmupInfo', _0: a};
-};
-var _davclark$taichi_site$Main$NewFormInfo = function (a) {
-	return {ctor: 'NewFormInfo', _0: a};
-};
-var _davclark$taichi_site$Main$init = {
-	ctor: '_Tuple2',
-	_0: {warmup: _davclark$taichi_site$MyViews$initVidModel, form: _davclark$taichi_site$MyViews$initVidModel, status: 'Initialized'},
-	_1: _elm_lang$core$Platform_Cmd$batch(
-		{
-			ctor: '::',
-			_0: A2(_davclark$taichi_site$Main$getClassInfo, _davclark$taichi_site$Main$NewWarmupInfo, 'yoga'),
-			_1: {
-				ctor: '::',
-				_0: A2(_davclark$taichi_site$Main$getClassInfo, _davclark$taichi_site$Main$NewFormInfo, 'current'),
-				_1: {ctor: '[]'}
-			}
-		})
 };
 var _davclark$taichi_site$Main$main = _elm_lang$html$Html$program(
 	{init: _davclark$taichi_site$Main$init, view: _davclark$taichi_site$Main$view, update: _davclark$taichi_site$Main$update, subscriptions: _davclark$taichi_site$Main$subscriptions})();

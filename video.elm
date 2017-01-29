@@ -10,13 +10,10 @@ import Html.Attributes
         , attribute
         , height
         )
-import Html.Events exposing (onClick)
-import Http
 
 import Array exposing (Array, get, length, empty)
 
-import MyViews exposing (VidInfo, VidModel, initVidModel,
-                         decodeSession, videoFile)
+import MyVideo
 
 main =
     Html.program
@@ -27,21 +24,21 @@ main =
         }
 
 
+-- MODEL
+
 type alias Model =
-    { warmup : VidModel
-    , form : VidModel
-    , status : String
+    { warmup : MyVideo.Model
+    , form : MyVideo.Model
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { warmup = initVidModel
-      , form = initVidModel
-      , status = "Initialized"
+    ( { warmup = MyVideo.init
+      , form = MyVideo.init
       }
-    , Cmd.batch [ getClassInfo NewWarmupInfo "yoga"
-                , getClassInfo NewFormInfo "current"
+    , Cmd.batch [ Cmd.map WarmupMsg (MyVideo.getClassInfo "yoga")
+                , Cmd.map FormMsg (MyVideo.getClassInfo "current")
                 ]
     )
 
@@ -51,92 +48,51 @@ init =
 
 
 type Msg
-    = NewFormInfo (Result Http.Error (Array VidInfo))
-    | NewWarmupInfo (Result Http.Error (Array VidInfo))
-    | SetWeek Int
-    | SetWarmup Int
-    | WarmupPlaying
+    = WarmupMsg MyVideo.Msg
+    | FormMsg MyVideo.Msg
 
-updateSelected subModel num =
-    {subModel | selected = num }
-
-
-updateVideos subModel videos =
-    -- We also reset selected to the first video
-    -- Out-of-bounds checking is handled under the view in videoIFrame
-    { subModel | videos = videos, selected = 0 }
-
-updatePlaying subModel playing =
-    { subModel | playing = playing }
- 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SetWeek num ->
-            ( { model | form = updateSelected model.form num }, Cmd.none )
+        WarmupMsg subMsg ->
+            let
+                ( updatedWarmupModel, warmupCmd ) =
+                    MyVideo.update subMsg model.warmup
+            in
+                ( { model | warmup = updatedWarmupModel }
+                  , Cmd.map WarmupMsg warmupCmd )
 
-        SetWarmup num ->
-            ( { model | warmup = updateSelected model.warmup num }, Cmd.none )
+        FormMsg subMsg ->
+            let
+                ( updatedFormModel, formCmd ) =
+                    MyVideo.update subMsg model.form
+            in
+                ( { model | form = updatedFormModel }
+                  , Cmd.map FormMsg formCmd )
 
-        NewFormInfo (Ok jsonData) ->
-            ( { model | form = updateVideos model.form jsonData
-              , status = "Updated"
-              }
-            , Cmd.none
-            )
 
-        NewWarmupInfo (Ok jsonData) ->
-            ( { model | warmup = updateVideos model.warmup jsonData
-              , status = "Updated"
-              }
-            , Cmd.none
-            )
 
-        NewFormInfo (Err msg) ->
-            ( { model | status = toString msg }, Cmd.none )
-
-        NewWarmupInfo (Err msg) ->
-            ( { model | status = toString msg }, Cmd.none )
-
-        WarmupPlaying ->
-            ( { model | warmup = updatePlaying model.warmup True } , Cmd.none)
 -- VIEW
-
 
 view : Model -> Html Msg
 view model =
-    case model.status of
-        "Updated" ->
-            dispVideos model
-
-        _ ->
-            text model.status
-
-
-dispVideos : Model -> Html Msg
-dispVideos model =
     div []
         (List.concat
           [ -- Warmups
-            (text "Warmup: "
-              :: List.map (numButton SetWarmup)
-                          (List.range 1 (length model.warmup.videos))
-            )
-          , (videoFile model.warmup WarmupPlaying)
+            [text "Warmup: "]
+          , List.map (\num -> Html.map WarmupMsg (MyVideo.numButton num))
+                     (List.range 1 (length model.warmup.videos))
+          , [Html.map WarmupMsg (MyVideo.view model.warmup)]
 
             -- Form
             -- , (text "Select week: "
             --     :: List.map numButton (List.range 1 (length model.form))
             --   )
-          , (videoFile model.form WarmupPlaying)
+          , [Html.map FormMsg (MyVideo.view model.form)]
           , journal
           ]
         )
 
-
-numButton : (Int -> Msg) -> Int -> Html Msg
-numButton target num =
-    button [ onClick (target (num - 1)) ] [ text (toString num) ]
 
 journal =
     [ h1 [] [ text "Take credit: Journal your practice!"]
@@ -158,16 +114,3 @@ journal =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
-
-
-
--- HTTP
-
-
-getClassInfo : (Result Http.Error (Array VidInfo) -> Msg) -> String -> Cmd Msg
-getClassInfo msgType session =
-    let
-        url =
-            "/class_info/" ++ session ++ ".json"
-    in
-        Http.send msgType (Http.get url decodeSession )
