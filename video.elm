@@ -54,6 +54,7 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        -- These are boilerplates to dispatch messages to the Module level
         WarmupMsg subMsg ->
             let
                 ( updatedWarmupModel, warmupCmd ) =
@@ -76,25 +77,17 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
+    -- A single point of mapping for each Msg branch makes us less likely to
+    -- miss things (though it enforces a strong form of componentization)
     div []
-        (List.concat
-          [ -- Warmups
-            [text "Warmup: "]
-          , List.map (\num -> Html.map WarmupMsg (MyVideo.numButton num))
-                     (List.range 1 (length model.warmup.videos))
-          , [Html.map WarmupMsg (MyVideo.view model.warmup)]
-
-            -- Form
-            -- , (text "Select week: "
-            --     :: List.map numButton (List.range 1 (length model.form))
-            --   )
-          , [Html.map FormMsg (MyVideo.view model.form)]
-          , journal
-          ]
-        )
+      [ Html.map WarmupMsg (MyVideo.view model.warmup)
+      , Html.map FormMsg (MyVideo.view model.form)
+      , journal_view
+      ]
 
 
-journal =
+journal_view =
+    div []
     [ h1 [] [ text "Take credit: Journal your practice!"]
       , iframe
         [ src ("https://docs.google.com/forms/d/e/" ++
@@ -108,8 +101,9 @@ journal =
         [ text "Loading..." ]
       ]
 
--- SUBSCRIPTIONS - currently unused
 
+
+-- SUBSCRIPTIONS - currently unused
 
 subscriptions : Model -> Sub Msg
 subscriptions model =

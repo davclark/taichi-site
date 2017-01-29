@@ -55,7 +55,10 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SetVidNum num ->
-            ( { model | selected = num }, Cmd.none )
+            if (num >= 0) && (num < (length model.videos)) then
+                ( { model | selected = num }, Cmd.none )
+            else
+                ( model, Cmd.none )
 
         NewVidInfo (Ok jsonData) ->
             ( { model | videos = jsonData
@@ -76,8 +79,15 @@ view : Model -> Html Msg
 view model =
     case model.status of
         "Updated" ->
+            div [] (List.concat
+             [ [text "Select: "]
+             -- Buttons
+             , List.map numButton
+                 (List.range 1 (length model.videos))
+             -- actual video
             -- XXX need logic here to check for file vs. IFrame
-            div [] (videoFile model)
+             , videoFile model
+             ])
 
         _ ->
             div [] [text model.status]
@@ -136,9 +146,9 @@ maybeAutoplay aYep =
         []
 
 videoFile : Model -> List (Html Msg)
-videoFile vidModel =
+videoFile model =
     let
-        maybe_info = get vidModel.selected vidModel.videos
+        maybe_info = get model.selected model.videos
 
     in
         case maybe_info of
@@ -156,8 +166,10 @@ videoFile vidModel =
                       , attribute "width" "100%"
                       -- This line seems particularly annoying
                       , onPlaying (VidPlaying True)
+                      , onPause (VidPlaying False)
+                      , onEnded (SetVidNum (model.selected + 1))
                       ]
-                      (maybeAutoplay vidModel.playing)
+                      (maybeAutoplay model.playing)
                   )
                   [
                      --  source
