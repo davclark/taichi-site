@@ -28,7 +28,7 @@ type alias Model =
         { videos : Array VidInfo
         , selected : Int
         , status : String
-        , playing : Bool
+        , autoplay : Bool
         }
 
 -- For now we only allow some pretty basic customization
@@ -39,7 +39,9 @@ init =
     { videos = empty
     , selected = 0
     , status = "Initialized"
-    , playing = False
+    -- playing is used to control presence of autoplay
+    -- it does NOT currently track whether the video is playing or not
+    , autoplay = False
     }
 
 
@@ -49,14 +51,27 @@ init =
 type Msg
     = NewVidInfo (Result Http.Error (Array VidInfo))
     | SetVidNum Int
-    | VidPlaying Bool
+    | AdvanceVid
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SetVidNum num ->
-            if (num >= 0) && (num < (length model.videos)) then
-                ( { model | selected = num }, Cmd.none )
+            -- Currently, *I* know this should always be valid, but the
+            -- compiler doesn't...
+            -- When we switch manually, we wait for user to hit play
+            ( { model | selected = num
+                      , autoplay = False
+               }
+            , Cmd.none )
+
+        AdvanceVid ->
+            -- Again, the compiler won't know this is a valid index
+            -- When we are in flow, we start the video playing automatically
+            if (model.selected < (length model.videos - 1)) then
+                ( { model | selected = model.selected + 1
+                          , autoplay = True }
+                , Cmd.none )
             else
                 ( model, Cmd.none )
 
@@ -70,8 +85,7 @@ update msg model =
         NewVidInfo (Err msg) ->
             ( { model | status = toString msg }, Cmd.none )
 
-        VidPlaying playing ->
-            ( { model | playing = playing } , Cmd.none)
+
 -- VIEW
 
 
@@ -93,14 +107,12 @@ view model =
             div [] [text model.status]
 
 
--- This is using the more recently developed pipeline approach from NoRedInk
-decodeSession : Decoder (Array VidInfo)
-decodeSession =
-    array
-        (decode VidInfo
-            |> required "title" string
-            |> required "url" string
-        )
+numButton : Int -> Html Msg
+numButton num =
+    button [ onClick (SetVidNum (num - 1)) ]
+           [ text (toString num) ]
+
+
 
 videoIFrame : Maybe VidInfo -> List (Html Msg)
 videoIFrame maybe_info =
@@ -124,20 +136,12 @@ videoIFrame maybe_info =
                 ]
             ]
 
+-- per https://www.sitepoint.com/essential-audio-and-video-events-for-html5/
+-- Firefox and Chrome (only two I care about) fire "pause" then "ended"
+-- at video's end
 -- General pattern for briefly stated event handlers
 onEnded msg =
   on "ended" (Json.Decode.succeed msg)
-
-onPlaying msg =
-  on "playing" (Json.Decode.succeed msg)
-
-onPause msg =
-    on "pause" (Json.Decode.succeed msg)
-
-numButton : Int -> Html Msg
-numButton num =
-    button [ onClick (SetVidNum (num - 1)) ]
-           [ text (toString num) ]
 
 maybeAutoplay aYep =
     if aYep then
@@ -164,14 +168,12 @@ videoFile model =
                       , attribute "controls" ""
                       -- The width built-in expects a number
                       , attribute "width" "100%"
-                      -- This line seems particularly annoying
-                      , onPlaying (VidPlaying True)
-                      , onPause (VidPlaying False)
-                      , onEnded (SetVidNum (model.selected + 1))
+                      , onEnded AdvanceVid
                       ]
-                      (maybeAutoplay model.playing)
+                      (maybeAutoplay model.autoplay)
                   )
                   [
+                     -- This approach messes up autoplay?
                      --  source
                      -- [ attribute "src" info.url
                      -- , type_ "video/mp4"
@@ -181,6 +183,14 @@ videoFile model =
                 ]
 
 -- HTTP
+
+decodeSession : Decoder (Array VidInfo)
+decodeSession =
+    array
+        (decode VidInfo
+            |> required "title" string
+            |> required "url" string
+        )
 
 
 getClassInfo : String -> Cmd Msg
