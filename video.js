@@ -9205,9 +9205,9 @@ var _davclark$taichi_site$MyVideo$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'AdvanceVid':
-				return (_elm_lang$core$Native_Utils.cmp(
+				return (model.autoadvance && (_elm_lang$core$Native_Utils.cmp(
 					model.selected,
-					_elm_lang$core$Array$length(model.videos) - 1) < 0) ? {
+					_elm_lang$core$Array$length(model.videos) - 1) < 0)) ? {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
@@ -9236,10 +9236,13 @@ var _davclark$taichi_site$MyVideo$update = F2(
 				}
 		}
 	});
-var _davclark$taichi_site$MyVideo$init = {videos: _elm_lang$core$Array$empty, selected: 0, status: 'Initialized', autoplay: false};
-var _davclark$taichi_site$MyVideo$Model = F4(
-	function (a, b, c, d) {
-		return {videos: a, selected: b, status: c, autoplay: d};
+var _davclark$taichi_site$MyVideo$init = F2(
+	function (label, autoadvance) {
+		return {label: label, videos: _elm_lang$core$Array$empty, selected: 0, status: 'Initialized', autoplay: false, autoadvance: autoadvance};
+	});
+var _davclark$taichi_site$MyVideo$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {label: a, videos: b, selected: c, status: d, autoplay: e, autoadvance: f};
 	});
 var _davclark$taichi_site$MyVideo$VidInfo = F2(
 	function (a, b) {
@@ -9446,7 +9449,10 @@ var _davclark$taichi_site$Main$WarmupMsg = function (a) {
 };
 var _davclark$taichi_site$Main$init = {
 	ctor: '_Tuple2',
-	_0: {warmup: _davclark$taichi_site$MyVideo$init, form: _davclark$taichi_site$MyVideo$init},
+	_0: {
+		warmup: A2(_davclark$taichi_site$MyVideo$init, 'Warmup', true),
+		form: A2(_davclark$taichi_site$MyVideo$init, 'Form practice', false)
+	},
 	_1: _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',

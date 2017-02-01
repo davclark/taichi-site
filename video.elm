@@ -34,8 +34,8 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( { warmup = MyVideo.init
-      , form = MyVideo.init
+    ( { warmup = MyVideo.init "Warmup" True
+      , form = MyVideo.init "Form practice" False
       }
     , Cmd.batch [ Cmd.map WarmupMsg (MyVideo.getClassInfo "yoga")
                 , Cmd.map FormMsg (MyVideo.getClassInfo "current")

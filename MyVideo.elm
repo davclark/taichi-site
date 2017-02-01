@@ -25,23 +25,28 @@ import List
 -- MODEL
 
 type alias Model =
-        { videos : Array VidInfo
+        { label : String
+        , videos : Array VidInfo
         , selected : Int
         , status : String
         , autoplay : Bool
+        , autoadvance : Bool
         }
 
 -- For now we only allow some pretty basic customization
 type alias VidInfo =
     { title : String, url : String }
 
-init =
-    { videos = empty
+init : String -> Bool -> Model
+init label autoadvance =
+    { label = label
+    , videos = empty
     , selected = 0
     , status = "Initialized"
-    -- playing is used to control presence of autoplay
-    -- it does NOT currently track whether the video is playing or not
+    -- autoplay setting only matters on initial load, so only bother setting
+    -- when switching to a new video
     , autoplay = False
+    , autoadvance = autoadvance
     }
 
 
@@ -68,7 +73,8 @@ update msg model =
         AdvanceVid ->
             -- Again, the compiler won't know this is a valid index
             -- When we are in flow, we start the video playing automatically
-            if (model.selected < (length model.videos - 1)) then
+            if model.autoadvance &&
+               (model.selected < (length model.videos - 1)) then
                 ( { model | selected = model.selected + 1
                           , autoplay = True }
                 , Cmd.none )
