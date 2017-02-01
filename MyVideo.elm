@@ -10,6 +10,7 @@ import Html.Attributes
         , height
         , type_
         , value
+        , selected
         )
 import Html.Events exposing (on, onClick, onInput)
 
@@ -121,10 +122,11 @@ view model =
              [ [text (model.label ++ ": ")]
              -- Dropdown
              , [select [ onInput SetVidNumStr ]
-                 (List.map (\num -> vidOption num model)
-                 (List.range 0 ((length model.videos) - 1)) )]
+                 (toList
+                   (indexedMap (vidOption model.selected) model.videos) )
+               ]
              -- actual video
-            -- XXX need logic here to check for file vs. IFrame
+             -- XXX need logic here to check for file vs. IFrame
              , videoFile model
              ])
 
@@ -138,19 +140,14 @@ numButton num =
     button [ onClick (SetVidNum (num - 1)) ]
            [ text (toString num) ]
 
-vidOption : Int -> Model -> Html Msg
-vidOption num model =
-  case get num model.videos of
-    Just vid ->
-        option (List.concat [ [ value (toString num) ]
-                            , (if num == model.selected then
-                                   [attribute "selected" ""]
-                               else
-                                   []) ])
-               [ text (toString vid.title) ]
 
-    Nothing ->
-        option [ value "1" ] [ text "No Video" ]
+vidOption : Int -> Int -> VidInfo -> Html Msg
+vidOption currSelected num vid =
+    option [ value (toString num)
+           , selected (num == currSelected)
+           ]
+           [ text (toString vid.title) ]
+
 
 
 videoIFrame : Maybe VidInfo -> List (Html Msg)
