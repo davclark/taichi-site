@@ -9,8 +9,9 @@ import Html.Attributes
         , width
         , height
         , type_
+        , value
         )
-import Html.Events exposing (on, onClick)
+import Html.Events exposing (on, onClick, onInput)
 
 import Http
 import Json.Decode exposing (Decoder, string, array)
@@ -56,11 +57,13 @@ init label autoadvance =
 type Msg
     = NewVidInfo (Result Http.Error (Array VidInfo))
     | SetVidNum Int
+    | SetVidNumStr String
     | AdvanceVid
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        -- Currently unused (for button usage)
         SetVidNum num ->
             -- Currently, *I* know this should always be valid, but the
             -- compiler doesn't...
@@ -69,6 +72,21 @@ update msg model =
                       , autoplay = False
                }
             , Cmd.none )
+
+        SetVidNumStr str ->
+            let num =
+              String.toInt str
+            in
+              case num of
+                Ok val ->
+                    ( { model | selected = val
+                              , autoplay = False
+                       }
+                    , Cmd.none )
+
+                -- This should never happen, but the compiler doesn't know that
+                Err message ->
+                    ( model, Cmd.none )
 
         AdvanceVid ->
             -- Again, the compiler won't know this is a valid index
@@ -100,10 +118,11 @@ view model =
     case model.status of
         "Updated" ->
             div [] (List.concat
-             [ [text "Select: "]
-             -- Buttons
-             , List.map numButton
-                 (List.range 1 (length model.videos))
+             [ [text (model.label ++ ": ")]
+             -- Dropdown
+             , [select [ onInput SetVidNumStr ]
+                 (List.map (\num -> vidOption num model)
+                 (List.range 0 ((length model.videos) - 1)) )]
              -- actual video
             -- XXX need logic here to check for file vs. IFrame
              , videoFile model
@@ -113,11 +132,25 @@ view model =
             div [] [text model.status]
 
 
+-- Currently unused
 numButton : Int -> Html Msg
 numButton num =
     button [ onClick (SetVidNum (num - 1)) ]
            [ text (toString num) ]
 
+vidOption : Int -> Model -> Html Msg
+vidOption num model =
+  case get num model.videos of
+    Just vid ->
+        option (List.concat [ [ value (toString num) ]
+                            , (if num == model.selected then
+                                   [attribute "selected" ""]
+                               else
+                                   []) ])
+               [ text (toString vid.title) ]
+
+    Nothing ->
+        option [ value "1" ] [ text "No Video" ]
 
 
 videoIFrame : Maybe VidInfo -> List (Html Msg)
