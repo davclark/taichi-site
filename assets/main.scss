@@ -38,7 +38,7 @@ $on-laptop:        800px;
 // Import partials from the `minima` theme.
 @import "minima";
 
-// Dav's modifications
+// Dav's modifications - only relevant for the iframe version
 .videoWrapper {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 */
