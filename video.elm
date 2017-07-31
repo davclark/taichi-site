@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 -- includes program
+
 import Html exposing (..)
 import Html.Attributes
     exposing
@@ -11,10 +12,10 @@ import Html.Attributes
         , attribute
         , height
         )
-import Array exposing (Array, get, length, empty)
 import MyVideo
 
 
+main : Program Never Model Msg
 main =
     Html.program
         { init = init
@@ -93,6 +94,7 @@ view model =
         ]
 
 
+journal_view : Html Msg
 journal_view =
     div []
         [ h1 [] [ text "Take credit: Journal your practice!" ]
