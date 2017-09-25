@@ -9484,20 +9484,15 @@ var _davclark$taichi_site$Main$journal_view = A2(
 			_1: {ctor: '[]'}
 		}
 	});
-var _davclark$taichi_site$Main$Model = F2(
-	function (a, b) {
-		return {warmup: a, form: b};
-	});
+var _davclark$taichi_site$Main$Model = function (a) {
+	return {form: a};
+};
 var _davclark$taichi_site$Main$FormMsg = function (a) {
 	return {ctor: 'FormMsg', _0: a};
-};
-var _davclark$taichi_site$Main$WarmupMsg = function (a) {
-	return {ctor: 'WarmupMsg', _0: a};
 };
 var _davclark$taichi_site$Main$init = {
 	ctor: '_Tuple2',
 	_0: {
-		warmup: A2(_davclark$taichi_site$MyVideo$init, 'Warmup', true),
 		form: A2(_davclark$taichi_site$MyVideo$init, 'Form practice', false)
 	},
 	_1: _elm_lang$core$Platform_Cmd$batch(
@@ -9505,44 +9500,24 @@ var _davclark$taichi_site$Main$init = {
 			ctor: '::',
 			_0: A2(
 				_elm_lang$core$Platform_Cmd$map,
-				_davclark$taichi_site$Main$WarmupMsg,
-				_davclark$taichi_site$MyVideo$getClassInfo('yoga')),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$core$Platform_Cmd$map,
-					_davclark$taichi_site$Main$FormMsg,
-					_davclark$taichi_site$MyVideo$getClassInfo('current')),
-				_1: {ctor: '[]'}
-			}
+				_davclark$taichi_site$Main$FormMsg,
+				_davclark$taichi_site$MyVideo$getClassInfo('current')),
+			_1: {ctor: '[]'}
 		})
 };
 var _davclark$taichi_site$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		if (_p0.ctor === 'WarmupMsg') {
-			var _p1 = A2(_davclark$taichi_site$MyVideo$update, _p0._0, model.warmup);
-			var updatedWarmupModel = _p1._0;
-			var warmupCmd = _p1._1;
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{warmup: updatedWarmupModel}),
-				_1: A2(_elm_lang$core$Platform_Cmd$map, _davclark$taichi_site$Main$WarmupMsg, warmupCmd)
-			};
-		} else {
-			var _p2 = A2(_davclark$taichi_site$MyVideo$update, _p0._0, model.form);
-			var updatedFormModel = _p2._0;
-			var formCmd = _p2._1;
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{form: updatedFormModel}),
-				_1: A2(_elm_lang$core$Platform_Cmd$map, _davclark$taichi_site$Main$FormMsg, formCmd)
-			};
-		}
+		var _p1 = A2(_davclark$taichi_site$MyVideo$update, _p0._0, model.form);
+		var updatedFormModel = _p1._0;
+		var formCmd = _p1._1;
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{form: updatedFormModel}),
+			_1: A2(_elm_lang$core$Platform_Cmd$map, _davclark$taichi_site$Main$FormMsg, formCmd)
+		};
 	});
 var _davclark$taichi_site$Main$view = function (model) {
 	return A2(
@@ -9552,19 +9527,12 @@ var _davclark$taichi_site$Main$view = function (model) {
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$map,
-				_davclark$taichi_site$Main$WarmupMsg,
-				_davclark$taichi_site$MyVideo$view(model.warmup)),
+				_davclark$taichi_site$Main$FormMsg,
+				_davclark$taichi_site$MyVideo$view(model.form)),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$map,
-					_davclark$taichi_site$Main$FormMsg,
-					_davclark$taichi_site$MyVideo$view(model.form)),
-				_1: {
-					ctor: '::',
-					_0: _davclark$taichi_site$Main$journal_view,
-					_1: {ctor: '[]'}
-				}
+				_0: _davclark$taichi_site$Main$journal_view,
+				_1: {ctor: '[]'}
 			}
 		});
 };
